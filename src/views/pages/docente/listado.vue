@@ -1,83 +1,4 @@
-<script>
-import Layout from "../../layouts/main";
-import { tableData } from "./dataAdvancedtable";
-export default {
-  components: { Layout },
-
-  data() {
-    return {
-      tableData: tableData,
-
-      title: "Advanced",
-      items: [
-        {
-          text: "Tables",
-        },
-        {
-          text: "Advanced",
-          active: true,
-        },
-      ],
-      totalRows: 1,
-      currentPage: 1,
-      perPage: 10,
-      pageOptions: [10, 25, 50, 100],
-      filter: null,
-      filterOn: [],
-      sortBy: "age",
-      sortDesc: false,
-      fields: [
-        {
-          key: "name",
-          sortable: true,
-        },
-        {
-          key: "position",
-          sortable: true,
-        },
-        {
-          key: "office",
-          sortable: true,
-        },
-        {
-          key: "age",
-          sortable: true,
-        },
-        {
-          key: "date",
-          sortable: true,
-        },
-        {
-          key: "salary",
-          sortable: true,
-        },
-      ],
-    };
-  },
-  computed: {
-    /**
-     * Total no. of records
-     */
-    rows() {
-      return this.tableData.length;
-    },
-  },
-  mounted() {
-    // Set the initial number of items
-    this.totalRows = this.items.length;
-  },
-  methods: {
-    /**
-     * Search the table data with search input
-     */
-    onFiltered(filteredItems) {
-      // Trigger pagination to update the number of buttons/pages due to filtering
-      this.totalRows = filteredItems.length;
-      this.currentPage = 1;
-    },
-  },
-};
-</script>
+<script src="./js.js"></script>
 
 <template>
   <Layout>
@@ -85,25 +6,33 @@ export default {
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Listado de Docente</h4>
+            <h4 class="card-title">Docentes</h4>
+
+            <button
+              type="button"
+              class="btn btn-success waves-effect waves-light float-end"
+              v-b-modal.creardocente
+              @click="modal=true"
+            >
+              Crear docente
+            </button>
           </div>
         </div>
       </div>
       <div class="col-lg-12">
         <div class="card">
-          <div class="card-body">
-
-            <div class="row mt-4">
+          <div class="card-body"></div>
+          <div class="row mt-4">
               <div class="col-sm-12 col-md-6">
                 <div id="tickets-table_length" class="dataTables_length">
                   <label class="d-inline-flex align-items-center">
-                    Show&nbsp;
+                    Mostrar&nbsp;
                     <b-form-select
                       v-model="perPage"
                       size="sm"
                       :options="pageOptions"
                     ></b-form-select
-                    >&nbsp;entries
+                    >&nbsp;entradas
                   </label>
                 </div>
               </div>
@@ -114,11 +43,11 @@ export default {
                   class="dataTables_filter text-md-end"
                 >
                   <label class="d-inline-flex align-items-center">
-                    Search:
+                    Buscar:
                     <b-form-input
                       v-model="filter"
                       type="search"
-                      placeholder="Search..."
+                      placeholder="Buscar..."
                       class="form-control form-control-sm ms-2"
                     ></b-form-input>
                   </label>
@@ -126,6 +55,7 @@ export default {
               </div>
               <!-- End search -->
             </div>
+
             <div class="table-responsive mb-0">
               <b-table
                 :items="tableData"
@@ -138,28 +68,192 @@ export default {
                 :filter="filter"
                 :filter-included-fields="filterOn"
                 @filtered="onFiltered"
-              ></b-table>
-            </div>
-            <div class="row">
-              <div class="col">
-                <div
-                  class="dataTables_paginate paging_simple_numbers float-end"
-                >
-                  <ul class="pagination pagination-rounded mb-0">
-                    <!-- pagination -->
-                    <b-pagination
-                      v-model="currentPage"
-                      :total-rows="rows"
-                      :per-page="perPage"
-                    ></b-pagination>
+              >
+                <template v-slot:cell(action)="data">
+                  <ul class="list-inline mb-0">
+                    <li class="list-inline-item">
+                      <a
+                        href="javascript:void(0);"
+                        v-on:click="editar(data.item)"
+                        class="px-2 text-primary"
+                        v-b-modal.creardocente
+                        data-toggle="modal"
+                        data-target=".bs-example-creardocente"
+                        v-b-tooltip.hover
+                        title="Editar"
+                      >
+                        <i class="uil uil-pen font-size-18"></i>
+                      </a>
+                    </li>
+                    <li class="list-inline-item">
+                      <a
+                        href="javascript:void(0);"
+                        v-on:click="eliminar(data.item)"
+                        class="px-2 text-danger"
+                        v-b-tooltip.hover
+                        title="Eliminar"
+                      >
+                        <i class="uil uil-power font-size-18"></i>
+                      </a>
+                    </li>
                   </ul>
-                </div>
-              </div>
+                </template>
+              </b-table>
             </div>
-
-          </div>
         </div>
       </div>
     </div>
+
+    <b-modal
+      id="creardocente"
+      size="lg"
+      :title="titlemodal"
+      title-class="font-18"
+      hide-footer
+      v-if="modal"
+    >
+      <form class="needs-validation" @submit.prevent="formSubmit">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="nombres">Nombres</label>
+              <input
+                id="nombres"
+                v-model="form.nombres"
+                type="text"
+                class="form-control"
+                :class="{
+                  'is-invalid': submitted && $v.form.nombres.$error,
+                }"
+              />
+
+              <div
+                v-if="submitted && $v.form.nombres.$error"
+                class="invalid-feedback"
+              >
+                <span v-if="!$v.form.nombres.required"
+                  >Nombres requeridos.</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="apellidos">Apellidos</label>
+              <input
+                id="apellidos"
+                v-model="form.apellidos"
+                type="text"
+                class="form-control"
+                :class="{
+                  'is-invalid': submitted && $v.form.apellidos.$error,
+                }"
+              />
+              <div
+                v-if="submitted && $v.form.apellidos.$error"
+                class="invalid-feedback"
+              >
+                <span v-if="!$v.form.apellidos.required"
+                  >Apellidos requeridos.</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label>Nivel</label>
+              <multiselect
+                v-model="nivel"
+                track-by="id_nivel"
+                label="nombre"
+                :options="optionsNivel"
+                class="helo"
+                @input="traerSubnivel($event)"
+              ></multiselect>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label>Subnivel</label>
+              <multiselect
+                v-model="form.subnivel_id"
+                :options="options"
+                track-by="id_subnivel"
+                label="nombre"
+                :multiple="true"
+                :class="{
+                  'is-invalid': submitted && $v.form.subnivel_id.$error,
+                }"
+              ></multiselect>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="email">Email</label>
+              <input
+                id="email"
+                v-model="form.email"
+                type="text"
+                class="form-control"
+                :class="{
+                  'is-invalid': submitted && $v.form.email.$error,
+                }"
+                @input="validarEmail($event)"
+              />
+
+              <div
+                v-if="submitted && $v.form.email.$error"
+                class="invalid-feedback"
+              >
+                <span v-if="!$v.form.email.required">Email requerido.</span>
+                <span v-if="!$v.form.email.email"
+                  >Ingrese un email valido.</span
+                >
+              
+              </div>
+
+              
+                <span class="text-danger" v-if="emailexist"
+                  >Este email ya está en uso.</span
+                >
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="password">Contraseña</label>
+              <input
+                id="password"
+                v-model="form.password"
+                type="password"
+                class="form-control"
+                :class="{
+                  'is-invalid': submitted && $v.form.password.$error,
+                }"
+              />
+              <div
+                v-if="submitted && $v.form.password.$error"
+                class="invalid-feedback"
+              >
+                <span v-if="!$v.form.password.required"
+                  >Contraseña requerida.</span
+                >
+                <span v-if="!$v.form.password.minLength"
+                  >Debe contener mínimo 6 caracteres</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary float-end" type="submit">
+          Guardar
+        </button>
+      </form>
+    </b-modal>
   </Layout>
 </template>

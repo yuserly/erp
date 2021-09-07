@@ -34,9 +34,9 @@ const routes = [
 
     },
     {
-        path:'/crear-docente',
-        name:'crear docente',
-        component: () => import(/* webpackChunkName: "home" */'../views/pages/docente/crear.vue'),
+        path:'/niveles',
+        name:'niveles',
+        component: () => import(/* webpackChunkName: "home" */'../views/pages/niveles/niveles.vue'),
         meta: { requiresAuth: false }
 
     },

@@ -33,6 +33,8 @@ import { initFirebaseBackend } from './helpers/firebase/authUtils';
 
 import { configureFakeBackend } from './helpers/fakebackend/fake-backend';
 
+Vue.prototype.$urlBackend = 'http://127.0.0.1:8000';
+
 const firebaseConfig = {
   apiKey: process.env.VUE_APP_APIKEY,
   authDomain: process.env.VUE_APP_AUTHDOMAIN,
