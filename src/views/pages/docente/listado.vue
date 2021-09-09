@@ -21,8 +21,9 @@
       </div>
       <div class="col-lg-12">
         <div class="card">
-          <div class="card-body"></div>
-          <div class="row mt-4">
+          <div class="card-body">
+
+            <div class="row mt-4">
               <div class="col-sm-12 col-md-6">
                 <div id="tickets-table_length" class="dataTables_length">
                   <label class="d-inline-flex align-items-center">
@@ -100,6 +101,9 @@
                 </template>
               </b-table>
             </div>
+
+          </div>
+          
         </div>
       </div>
     </div>
