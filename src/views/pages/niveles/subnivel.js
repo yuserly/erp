@@ -173,6 +173,7 @@ export default {
       this.titlemodal = "Editar Subnivel";
       this.form.id_subnivel = datos.id_subnivel;
     },
+    
     eliminar(datos) {
       console.log(datos);
 
@@ -197,18 +198,17 @@ export default {
       }).then((result) => {
         if (result.value) {
           this.axios
-            .get(
-              `${this.urlbackend}/nivel/updatesubnivel/${datos.id_subnivel}/${estado}`
+            .delete(
+              `${this.urlbackend}/nivel/deleteSubNivel/${datos.id_subnivel}`
             )
             .then((res) => {
+              console.log(res);
               if (res.data.success) {
-                if (estado == 1) {
+                
                   var message = "Subnivel activado con exito";
-                } else {
-                   message = "Subnivel desactivado con exito";
-                }
 
-                var type = "success";
+                  var type = "success";
+
               } else {
                 if (estado == 1) {
                   message = "Error al activar el subnivel";
@@ -285,7 +285,7 @@ export default {
             )
             .then((res) => {
               if (res.data.success) {
-                const title = "Editar subnivel";
+                const title = "Editar subnivel"; 
                 const message = "Subnivel editado con exito";
                 const type = "success";
 

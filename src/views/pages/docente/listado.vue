@@ -164,37 +164,6 @@
         <div class="row">
           <div class="col-md-6">
             <div class="mb-3">
-              <label>Nivel</label>
-              <multiselect
-                v-model="nivel"
-                track-by="id_nivel"
-                label="nombre"
-                :options="optionsNivel"
-                class="helo"
-                @input="traerSubnivel($event)"
-              ></multiselect>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label>Subnivel</label>
-              <multiselect
-                v-model="form.subnivel_id"
-                :options="options"
-                track-by="id_subnivel"
-                label="nombre"
-                :multiple="true"
-                :class="{
-                  'is-invalid': submitted && $v.form.subnivel_id.$error,
-                }"
-              ></multiselect>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-6">
-            <div class="mb-3">
               <label for="email">Email</label>
               <input
                 id="email"
@@ -247,6 +216,24 @@
                   >Debe contener mínimo 6 caracteres</span
                 >
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label>Subnivel</label>
+              <multiselect
+                v-model="form.subnivel_id"
+                :options="options"
+                track-by="id_subnivel"
+                :custom-label="customLabel"
+                :multiple="true"
+                :class="{
+                  'is-invalid': submitted && $v.form.subnivel_id.$error,
+                }"
+              ></multiselect>
             </div>
           </div>
         </div>
