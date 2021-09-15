@@ -40,6 +40,20 @@ const routes = [
         meta: { requiresAuth: false }
 
     },
+    {
+        path:'/empresa',
+        name:'empresa',
+        component: () => import(/* webpackChunkName: "home" */'../views/pages/empresas/empresa.vue'),
+        meta: { requiresAuth: false }
+
+    },
+    {
+        path:'/crear-empresa',
+        name:'crear empresa',
+        component: () => import(/* webpackChunkName: "home" */'../views/pages/empresas/crear-empresa.vue'),
+        meta: { requiresAuth: false }
+
+    },
 ]
 
 

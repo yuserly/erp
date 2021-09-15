@@ -39,6 +39,19 @@ export const menuItems = [
                 parentId: 5
             }
         ]
+    },
+    {
+        id: 7,
+        label: "Empresas",
+        icon: "fas fa-building",
+        subItems: [
+            {
+                id: 8,
+                label: "Empresas",
+                link: "/empresa",
+                parentId: 7
+            }
+        ]
     }
 ];
 
