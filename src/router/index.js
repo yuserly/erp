@@ -1,82 +1,169 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-import VueMeta from 'vue-meta'
+import VueMeta from "vue-meta";
 
-
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 Vue.use(VueMeta, {
-    // The component option name that vue-meta looks for meta info on.
-    keyName: 'page',
-})
+  // The component option name that vue-meta looks for meta info on.
+  keyName: "page",
+});
 
 const routes = [
-    {
-        path:'/listado-alumno',
-        name:'listado alumno',
-        component: () => import(/* webpackChunkName: "home" */'../views/pages/alumno/listado.vue'),
-        meta: { requiresAuth: false }
-
-    },
-    {
-        path:'/crear-alumno',
-        name:'crear alumno',
-        component: () => import(/* webpackChunkName: "home" */'../views/pages/alumno/crear.vue'),
-        meta: { requiresAuth: false }
-
-    }
-    ,
-    {
-        path:'/listado-docente',
-        name:'listado docente',
-        component: () => import(/* webpackChunkName: "home" */'../views/pages/docente/listado.vue'),
-        meta: { requiresAuth: false }
-
-    },
-    {
-        path:'/niveles',
-        name:'niveles',
-        component: () => import(/* webpackChunkName: "home" */'../views/pages/niveles/niveles.vue'),
-        meta: { requiresAuth: false }
-
-    },
-    {
-        path:'/empresa',
-        name:'empresa',
-        component: () => import(/* webpackChunkName: "home" */'../views/pages/empresas/empresa.vue'),
-        meta: { requiresAuth: false }
-
-    },
-    {
-        path:'/crear-empresa',
-        name:'crear empresa',
-        component: () => import(/* webpackChunkName: "home" */'../views/pages/empresas/crear-empresa.vue'),
-        meta: { requiresAuth: false }
-
-    },
-]
-
+  {
+    path: "/listado-alumno",
+    name: "listado alumno",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/alumno/listado.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/crear-alumno",
+    name: "crear alumno",
+    component: () =>
+      import(/* webpackChunkName: "home" */ "../views/pages/alumno/crear.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/listado-docente",
+    name: "listado docente",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/docente/listado.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/niveles",
+    name: "niveles",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/niveles/niveles.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/empresa",
+    name: "empresa",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/empresas/empresa.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/crear-empresa",
+    name: "crear empresa",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/empresas/crear-empresa.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: () =>
+      import(/* webpackChunkName: "home" */ "../views/pages/login/login.vue"),
+    meta: { requiresAuth: false },
+  },
+];
 
 const router = new VueRouter({
-    routes,
-    // Use the HTML5 history API (i.e. normal-looking routes)
-    // instead of routes with hashes (e.g. example.com/#/about).
-    // This may require some server configuration in production:
-    // https://router.vuejs.org/en/essentials/history-mode.html#example-server-configurations
-    mode: 'history',
-    scrollBehavior(to, from, savedPosition) {
-        if (savedPosition) {
-            return savedPosition
-        } else {
-            return {
-                x: 0,
-                y: 0
-            }
-        }
-    },
-})
+  routes,
+  // Use the HTML5 history API (i.e. normal-looking routes)
+  // instead of routes with hashes (e.g. example.com/#/about).
+  // This may require some server configuration in production:
+  // https://router.vuejs.org/en/essentials/history-mode.html#example-server-configurations
+  mode: "history",
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return {
+        x: 0,
+        y: 0,
+      };
+    }
+  },
+});
 
-export default router
+router.beforeEach((to, from, next) => {
+  //A Logged-in user can't go to login page again
+  if (to.name === "login" && localStorage.getItem("token")) {
+    router.push({
+      name: "login",
+    });
+
+    //the route requires authentication
+  } else if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (!localStorage.getItem("token")) {
+      //user not logged in, send them to login page
+      router.push({
+        name: "login",
+        query: {
+          to: to.name,
+        },
+      });
+    } else {
+      if (!hasAccess(to.name)) {
+        router.push({
+          name: "empresa",
+        });
+      }
+    }
+  }
+
+  return next();
+});
+
+function hasAccess(name) {
+  const rol = localStorage.getItem("rol");
+
+  switch (name) {
+    case "empresa":
+      if (rol == "estudiante") {
+        return true;
+      } else {
+        return false;
+      }
+
+    case "crear empresa":
+      if (rol == "estudiante") {
+        return true;
+      } else {
+        return false;
+      }
+
+    case "niveles":
+    if (rol == "estudiante") {
+    return true;
+    } else {
+    return false;
+    }
+
+    case "listado docente":
+    if (rol == "estudiante") {
+    return true;
+    } else {
+    return false;
+    }
+
+    case "listado alumno":
+    if (rol == "estudiante") {
+    return true;
+    } else {
+    return false;
+    }
+
+    default:
+      return false;
+  }
+}
+
+export default router;
 
 // INFORMACION DE LA PLANTILLA
 

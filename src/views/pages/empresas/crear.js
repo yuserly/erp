@@ -16,7 +16,7 @@ export default {
       return {
         urlbackend: this.$urlBackend,
         form: {
-          id_estudiante: 1,
+          token: '',
           rut_empresa: '',
           rut_represetante: '',
           razon_social: '',
@@ -41,7 +41,7 @@ export default {
     },
     mounted() {
       this.traerTipoEmpresa();
-
+      this.form.token = localStorage.getItem('token');
     },
     methods: {
      

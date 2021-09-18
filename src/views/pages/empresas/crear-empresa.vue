@@ -24,13 +24,13 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" v-if="form.tipo_empresa">
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
             <form class="needs-validation" @submit.prevent="formSubmit">
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6" v-if="form.tipo_empresa.id_tipoempresa == 1">
                   <div class="mb-3">
                     <label for="rut_empresa">RUT Empresa</label>
                     <input
