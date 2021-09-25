@@ -69,6 +69,27 @@ const routes = [
       import(/* webpackChunkName: "home" */ "../views/pages/login/login.vue"),
     meta: { requiresAuth: false },
   },
+  {
+    path: "/editar-empresa/:id",
+    name: "editar empresa",
+    component: () =>
+      import(/* webpackChunkName: "home" */ "../views/pages/empresas/editar-empresa.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/solicitud-empresa",
+    name: "solicitud empresa",
+    component: () =>
+      import(/* webpackChunkName: "home" */ "../views/pages/solicitud/solicitud-empresa.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/ver-solicitud/:id",
+    name: "ver solicitud",
+    component: () =>
+      import(/* webpackChunkName: "home" */ "../views/pages/solicitud/ver-solicitud.vue"),
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = new VueRouter({
@@ -152,6 +173,27 @@ function hasAccess(name) {
     }
 
     case "listado alumno":
+    if (rol == "estudiante") {
+    return true;
+    } else {
+    return false;
+    }
+
+    case "editar empresa":
+    if (rol == "estudiante") {
+    return true;
+    } else {
+    return false;
+    }
+
+    case "solicitud empresa":
+    if (rol == "estudiante") {
+    return true;
+    } else {
+    return false;
+    }
+
+    case "ver solicitud":
     if (rol == "estudiante") {
     return true;
     } else {

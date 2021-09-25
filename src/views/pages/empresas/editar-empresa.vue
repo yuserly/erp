@@ -1,4 +1,4 @@
-<script src="./crear.js"></script>
+<script src="./editar.js"></script>
 
 <template>
   <Layout>

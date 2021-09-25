@@ -61,7 +61,7 @@ Vue.component('apexchart', VueApexCharts)
 Vue.use(Vuelidate)
 Vue.use(VueSweetalert2);
 Vue.use(VueAxios, axios)
-axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem('token')}`;
+// axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem('token')}`;
 Vue.use(require("vue-chartist"));
 Vue.use(VueMask);
 

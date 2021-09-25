@@ -1,30 +1,32 @@
-<script src="./empresa.js"></script>
+<script src="./solicitud-empresa.js"></script>
 
 <template>
-  <Layout>
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="card">
-          <div class="card-body">
-            <h4 class="card-title">Listado de Empresa</h4>
+  <Layout> 
+      <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Listado Subnivel</h4>
 
-            <div class="row mt-1">
-              <div class="col-12">
-                <router-link to="crear-empresa"
-                  ><button
-                    type="button"
-                    class="btn btn-success waves-effect waves-light float-end"
-                  >
-                    Crear empresa
-                  </button>
-                </router-link>
-              </div>
+                <div class="row mt-5">
+                    <div class="col-12 col-lg-6">
+                        <div class="mb-3">
+                        <label>Buscar por</label>
+                        <multiselect
+                            v-model="subnivelbusqueda"
+                            :options="options"
+                            track-by="id_subnivel"
+                            :custom-label="customLabel"
+                            @input="traerbusqueda()"
+                        ></multiselect>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+            </div>
         </div>
-      </div>
 
-      <div class="col-lg-12">
+        <div class="col-lg-12" v-if="subnivelbusqueda">
         <div class="card">
           <div class="card-body">
             <div class="row mt-4">
@@ -76,27 +78,13 @@
               >
                 <template v-slot:cell(action)="data">
                   <ul class="list-inline mb-0">
+                    
                     <li
                       class="list-inline-item"
-                      v-if="
-                        data.item.estado_id == 5 || data.item.estado_id == 3
-                      "
                     >
-                      <router-link
-                        :to="'editar-empresa/' + data.item.id_empresa"
-                      >
-                        <a class="px-2 text-primary" title="Editar">
-                          <i class="uil uil-pen font-size-18"></i>
-                        </a>
-                      </router-link>
-                    </li>
-                    <li
-                      class="list-inline-item"
-                      v-if="data.item.estado_id == 3"
-                    >
-                      <router-link :to="'formulario/' + data.item.id_empresa">
-                        <a class="px-2 text-primary" title="Formulario">
-                          <i class="uil uil-arrow-right font-size-18"></i>
+                      <router-link :to="'ver-solicitud/' + data.item.empresa_id">
+                        <a class="px-2 text-primary" title="ver solicitud">
+                          <i class="uil uil-eye font-size-18"></i>
                         </a>
                       </router-link>
                     </li>
@@ -104,9 +92,27 @@
                 </template>
               </b-table>
             </div>
+            <div class="row">
+              <div class="col">
+                <div
+                  class="dataTables_paginate paging_simple_numbers float-end"
+                >
+                  <ul class="pagination pagination-rounded mb-0">
+                    <!-- pagination -->
+                    <b-pagination
+                      v-model="currentPage"
+                      :total-rows="totalRows"
+                      :per-page="perPage"
+                    ></b-pagination>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      </div>
+
+
   </Layout>
 </template>

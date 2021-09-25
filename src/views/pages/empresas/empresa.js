@@ -55,6 +55,8 @@ export default {
     },
     
     mounted() {
+      this.axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem('token')}`;
+
       this.totalRows = this.items.length;
       this.traerEmpresa();
     },
@@ -63,7 +65,6 @@ export default {
         this.axios
         .get(`${this.urlbackend}/empresa/obtenerempresa/`)
         .then((response) => {
-          console.log(response)
           response.data.map((p) => {
             
             // crear nueva propiedad y asigno el valor

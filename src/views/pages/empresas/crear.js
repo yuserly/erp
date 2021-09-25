@@ -24,9 +24,11 @@ export default {
           celular: '',
           email: '',
           capital_inicial: 0,
-          tipo_empresa:''
+          tipo_empresa:'',
+          docente:''
         },
         options: [],
+        optionsDocente : [],
         submitted: false,
         
       };
@@ -35,21 +37,44 @@ export default {
       form: {
         tipo_empresa:{
           required
+        },
+        docente:{
+          required
         }
       },
       
     },
     mounted() {
+      this.axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem('token')}`;
       this.traerTipoEmpresa();
       this.form.token = localStorage.getItem('token');
+      this.traerDocente();
+
+      console.log(this.axios.defaults.headers)
     },
     methods: {
+
+      customLabel({nombres, apellidos}) {
+        return `${nombres} ${apellidos}`;
+      },
      
       traerTipoEmpresa(){
         this.axios
         .get(`${this.urlbackend}/empresa/obtenertipoempresa/`)
         .then((response) => {
           this.options = response.data;
+        });
+
+      },
+
+      traerDocente(){
+
+        this.axios
+        .get(`${this.urlbackend}/empresa/obtenerdocentealumno/`)
+        .then((response) => {
+          this.optionsDocente = response.data[0].docente;
+
+          console.log(response)
         });
 
       },
