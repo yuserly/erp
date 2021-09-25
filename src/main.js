@@ -12,6 +12,13 @@ import store from '@/state/store'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
+import VueToastr2 from 'vue-toastr-2'
+import 'vue-toastr-2/dist/vue-toastr-2.min.css'
+ 
+window.toastr = require('toastr')
+ 
+Vue.use(VueToastr2)
+
 import App from './App.vue'
 // As a plugin
 import VueMask from 'v-mask'

@@ -11,7 +11,11 @@
 }
 
 .authentication-bg{
-    background-color: $auth-bg;
+    background: url(https://www.teahub.io/photos/full/160-1609765_sobre-la-educacion.jpg);
+    background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  background-attachment: fixed;
     .auth-logo{
         .logo{
             margin: 0px auto;

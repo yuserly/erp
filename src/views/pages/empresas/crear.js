@@ -47,7 +47,7 @@ export default {
      
       traerTipoEmpresa(){
         this.axios
-        .get(`${this.urlbackend}/empresa/obtenertipoempresa/`)
+        .get(`${this.urlbackend}/empresa/obtenertipoempresa/`, { 'headers': { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
         .then((response) => {
           this.options = response.data;
         });

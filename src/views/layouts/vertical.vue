@@ -4,7 +4,6 @@ import { layoutComputed } from "@/state/helpers";
 
 import Topbar from "@/components/topbar";
 import Sidebar from "@/components/side-bar";
-import RightSidebar from "@/components/right-sidebar";
 import Footer from "@/components/footer";
 
 export default {
@@ -16,7 +15,6 @@ export default {
   components: {
     Topbar,
     Sidebar,
-    RightSidebar,
     Footer,
   },
    computed: {
@@ -76,6 +74,6 @@ export default {
       <Footer />
     </div>
     <!-- end main content-->
-    <RightSidebar />
+ 
   </div>
 </template>

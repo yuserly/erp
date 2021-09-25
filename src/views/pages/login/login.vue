@@ -83,17 +83,17 @@ export default {
         <div class="row">
           <div class="col-lg-12">
             <div class="text-center">
-              <router-link to="/" class="mb-5 d-block auth-logo">
+              <router-link to="/login" class="mb-5 d-block auth-logo">
                 <img
-                  src="@/assets/images/logo-dark.png"
+                  src="@/assets/images/logo.png"
                   alt=""
-                  height="22"
+                  height="150"
                   class="logo logo-dark"
                 />
                 <img
-                  src="@/assets/images/logo-light.png"
+                  src="@/assets/images/logo.png"
                   alt=""
-                  height="22"
+                  height="100"
                   class="logo logo-light"
                 />
               </router-link>
@@ -106,7 +106,7 @@ export default {
               <div class="card-body p-4">
                 <div class="text-center mt-2">
                   <h5 class="text-primary">Bienvenido !</h5>
-                  <p class="text-muted">Sign in to continue to Minible.</p>
+                  <p class="text-muted">ERP Contabilidad y Administración.</p>
                 </div>
                 <div class="p-2 mt-4">
                   <form class="needs-validation" @submit.prevent="formSubmit">
@@ -116,7 +116,7 @@ export default {
                         type="text"
                         class="form-control"
                         id="username"
-                        placeholder="user@mail.com"
+                        placeholder="usuario@correo.com"
                         v-model="form.email"
                         :class="{
                         'is-invalid': submitted && $v.form.email.$error,
@@ -140,13 +140,13 @@ export default {
                           Olvidó su contraseña</router-link
                         >
                       </div>
-                      <label for="userpassword">Password</label>
+                      <label for="userpassword">Contraseña</label>
                       <input
                         type="password"
                         class="form-control"
                         id="userpassword"
                         v-model="form.password"
-                        placeholder="Ingresa contraseña"
+                        placeholder="**********"
                         :class="{
                         'is-invalid': submitted && $v.form.password.$error,
                         }"
@@ -166,10 +166,15 @@ export default {
                         class="btn btn-primary w-sm waves-effect waves-light"
                         type="submit"
                       >
-                        Iniciar
+                      <i class="mdi mdi-login-variant"></i>
+                        Ingresar
                       </button>
                     </div>
-
+                    <hr>
+                    <p>
+                © {{ new Date().getFullYear() }} Desarrollado por 
+                <i class="mdi mdi-checkbox-marked-circle-outline text-primary"></i> CENTO - Servicios Informaticos.
+              </p>
                    
                   </form>
                 </div>
@@ -177,16 +182,11 @@ export default {
             </div>
 
             <div class="mt-5 text-center">
-              <p>
-                © {{ new Date().getFullYear() }} Minible. Crafted with
-                <i class="mdi mdi-heart text-danger"></i> by Themesbrand
-              </p>
+              
             </div>
           </div>
         </div>
-        <!-- end row -->
       </div>
-      <!-- end container -->
     </div>
   </div>
 </template>

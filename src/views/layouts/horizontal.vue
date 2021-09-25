@@ -1,6 +1,5 @@
 <script>
 import HorizontalTopbar from "@/components/horizontal-topbar";
-import RightBar from "@/components/right-sidebar";
 import Footer from "@/components/footer";
 
 import { layoutComputed } from "@/state/helpers";
@@ -12,7 +11,6 @@ export default {
   components: {
     HorizontalTopbar,
     Footer,
-    RightBar,
   },
   data() {
     return {};
@@ -86,6 +84,6 @@ export default {
       <!-- end main content-->
     </div>
     <!-- END layout-wrapper -->
-    <RightBar />
+  
   </div>
 </template>

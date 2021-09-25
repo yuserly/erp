@@ -63,6 +63,33 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/actividad_economica",
+    name: "actividad economica",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/giros/giro.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/gestion_proveedor",
+    name: "gestion proveedor",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/proveedor/proveedor.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/producto_proveedor",
+    name: "producto proveedor",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/proveedor/producto.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/login",
     name: "login",
     component: () =>
@@ -136,6 +163,25 @@ function hasAccess(name) {
       } else {
         return false;
       }
+      case "producto proveedor":
+        if (rol == "estudiante") {
+          return true;
+        } else {
+          return false;
+        }
+
+      case "actividad economica":
+        if (rol == "estudiante") {
+          return true;
+        } else {
+          return false;
+        }
+        case "gestion proveedor":
+          if (rol == "estudiante") {
+            return true;
+          } else {
+            return false;
+          }
 
     case "niveles":
     if (rol == "estudiante") {
