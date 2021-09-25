@@ -26,8 +26,9 @@
                   type="button"
                   class="btn btn-success waves-effect waves-light float-end"
                   v-b-modal.crearalumno
-                  @click="modal = true; titlemodal= 'Crear Alumno'; typeform ='create' "
+                  @click="modalNuevo"
                 >
+                  <i class="fas fa-plus-circle"></i>
                   Crear alumno
                 </button>
               </div>
@@ -140,10 +141,12 @@
             <div class="mb-3">
               <label for="rut">RUT</label>
               <input
+                maxlength = "10"
+                v-on:input="checkRut(this)"
                 id="rut"
                 v-model="form.rut"
-                type="text"
-                class="form-control"
+                type="text" 
+                class="form-control inputRUT"
                 :class="{
                   'is-invalid': submitted && $v.form.rut.$error,
                 }"
@@ -288,9 +291,13 @@
 
 
         </div>
-        <button class="btn btn-primary float-end" type="submit">
-          Guardar
+        <button v-if="btnCreate === true" class="btn btn-primary float-end" type="submit">
+          <i class="far fa-save"></i> Crear
         </button>
+        <button v-else class="btn btn-primary float-end" type="submit">
+          <i class="fas fa-sync"></i> Actualizar
+        </button>
+
       </form>
     </b-modal>
 

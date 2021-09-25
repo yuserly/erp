@@ -6,6 +6,7 @@ import {
 
 import Multiselect from "vue-multiselect";
 import Swal from "sweetalert2";
+import $ from 'jquery'
 
 import Layout from "../../layouts/main";
 export default {
@@ -33,6 +34,7 @@ export default {
         titlemodal: 'Crear Alumno',
         modal: false,
         emailexist: false,
+        btnCreate: true,
         // tabla
 
         tableData: [],
@@ -108,7 +110,7 @@ export default {
         this.totalRows = filteredItems.length;
         this.currentPage = 1;
       },
-      traerbusqueda(){
+    traerbusqueda(){
         this.axios
         .get(`${this.urlbackend}/estudiante/obtenerestudiante/${this.subnivelbusqueda.id_subnivel}`)
         .then((response) => {
@@ -128,21 +130,78 @@ export default {
           });
           this.tableData = response.data;
         });
-      },
-      traerSubnivel(){
+    },
+    modalNuevo()
+    {
+      this.modal = true;
+      this.titlemodal = "Crear Alumno";
+      this.typeform = "create",
+      this.form = {
+        rut: '',
+        nombres: '',
+        apellidos: '',
+        email: '',
+        subnivel_id: '',
+        password: '',
+      };
+      this.btnCreate        = true;
+    },
+    traerSubnivel(){
         this.axios
         .get(`${this.urlbackend}/nivel/obtenersubnivelesporNivel/`)
         .then((response) => {
           this.options = response.data;
         });
 
-      },
-      customLabel ({ nombre, nivel , ano_generacion}) {
+    },
+    customLabel ({ nombre, nivel , ano_generacion}) {
         return `( ${nivel.nombre} - ${ano_generacion} ) ${nombre}`
 
-     },
-      // eslint-disable-next-line no-unused-vars
-      formSubmit() {
+    },
+     
+    checkRut() {
+
+      var valor = this.form.rut.replace('.','');  // Quita Punto
+      valor = valor.replace('-','');// Quita Guión
+      var cuerpo = valor.slice(0,-1);// Aislar Cuerpo y Dígito Verificador
+      var dv = valor.slice(-1).toUpperCase();
+      this.form.rut = cuerpo + '-'+ dv// Formatear RUN
+
+      if(cuerpo.length < 7) {// Si no cumple con el mínimo de digitos ej. (n.nnn.nnn)
+          $('.inputRUT').attr('style', 'border-color: red !important');
+          $('.btnSubmit').prop('disabled',  true);
+          return false;
+      }
+
+      var suma = 0; // Calcular Dígito Verificador
+      var multiplo = 2;
+
+      for(var i=1;i<=cuerpo.length;i++) // Para cada dígito del Cuerpo
+      {
+          var index = multiplo * valor.charAt(cuerpo.length - i); // Obtener su Producto con el Múltiplo Correspondiente
+          suma = suma + index; // Sumar al Contador General
+          if(multiplo < 7) {
+              multiplo = multiplo + 1;
+          }else{
+              multiplo = 2;
+          } // Consolidar Múltiplo dentro del rango [2,7]
+      }
+
+      var dvEsperado = 11 - (suma % 11); // Calcular Dígito Verificador en base al Módulo 11
+      dv = (dv == 'K')?10:dv; // Casos Especiales (0 y K)
+      dv = (dv == 0)?11:dv;
+
+      if(dvEsperado != dv) {
+          $('.inputRUT').attr('style', 'border-color: red !important');
+          $('.btnSubmit').prop('disabled',  true);
+          return false;
+      } // Validar que el Cuerpo coincide con su Dígito Verificador
+
+      $('.inputRUT').attr('style', 'border-color: #40A944 !important');  // Si todo sale bien, eliminar errores (decretar que es válido)
+      $('.btnSubmit').prop('disabled',  false);
+    },
+
+    formSubmit() {
         this.submitted = true;
         // stop here if form is invalid
         this.$v.$touch();
@@ -152,7 +211,6 @@ export default {
             this.axios
               .post(`${this.urlbackend}/estudiante/crearestudiante`, this.form)
               .then((res) => {
-                console.log(res)
                 if (res.data.success) {
                   const title = "Crear alumno";
                   const message = "Alumno creado con exito";
@@ -215,6 +273,7 @@ export default {
                 this.$v.form.$reset();
 
                 this.successmsg(title, message, type);
+                this.btnCreate = true;
               }
             })
             .catch((error) => {
@@ -232,9 +291,9 @@ export default {
 
           }
         }
-      },
+    },
 
-      editar(datos){
+    editar(datos){
         
         this.traerSubnivel();
         this.modal = true;
@@ -246,6 +305,7 @@ export default {
         this.form.email=datos.user.email;
         this.form.subnivel_id = this.options.find(option => option.id_subnivel === datos.subnivel_id);
         this.titlemodal = "Editar Alumno";
+        this.btnCreate = false;
 
       },
 

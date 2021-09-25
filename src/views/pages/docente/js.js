@@ -100,6 +100,7 @@ export default {
       this.axios
         .get(`${this.urlbackend}/docente/obtenerdocente`)
         .then((response) => {
+          console.log(response)
           response.data.map((p) => {
             if (p.user.estado_id == 1) {
               p.user.estado_id = "Activo";

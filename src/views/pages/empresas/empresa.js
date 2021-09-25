@@ -63,7 +63,7 @@ export default {
     methods: {
       traerEmpresa(){
         this.axios
-        .get(`${this.urlbackend}/empresa/obtenerempresa/`)
+        .get(`${this.urlbackend}/empresa/obtenerempresa/`, { 'headers': { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
         .then((response) => {
           response.data.map((p) => {
             

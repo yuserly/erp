@@ -1,57 +1,69 @@
 export const menuItems = [
     {
+        id: 0,
+        label: "Administración",
+        isTitle: true
+    },
+    {
         id: 1,
-        label: "Docente",
+        label: "Gestión Usuarios",
         icon: "fas fa-users",
         subItems: [
-           
             {
-                id: 2,
-                label: "Listar Docente",
+                id: 1.2,
+                label: "Docentes",
                 link: "/listado-docente",
+                parentId: 1
+            },
+            {
+                id: 1.2,
+                label: "Estudiantes",
+                link: "/listado-alumno",
                 parentId: 1
             }
         ]
     },
     {
-        id: 3,
-        label: "Alumnos",
-        icon: "fas fa-graduation-cap",
-        subItems: [
-           
-            {
-                id: 4,
-                label: "Listar Alumnos",
-                link: "/listado-alumno",
-                parentId: 3
-            }
-        ]
-    },
-    {
-        id: 5,
-        label: "Niveles",
+        id: 2,
+        label: "Gestión Sistema",
         icon: "fas fa-network-wired",
         subItems: [
             {
-                id: 6,
-                label: "Listado de Niveles",
+                id: 2.1,
+                label: "Niveles",
                 link: "/niveles",
-                parentId: 5
+                parentId: 2
+            },
+            {
+                id: 2.2,
+                label: "Act. Economicas",
+                link: "/actividad_economica",
+                parentId: 2
+            },
+            {
+                id: 2.3,
+                label: "Gestión Proveedores",
+                link: "/gestion_proveedor",
+                parentId: 2
+            },
+            {
+                id: 2.4,
+                label: "Productos Proveedor",
+                link: "/producto_proveedor",
+                parentId: 2
             }
         ]
     },
     {
-        id: 7,
-        label: "Empresas",
+        id: 3,
+        label: "Plataforma",
+        isTitle: true
+    },
+    {
+        id: 4,
+        label: "Gestión Empresas",
         icon: "fas fa-building",
-        subItems: [
-            {
-                id: 8,
-                label: "Empresas",
-                link: "/empresa",
-                parentId: 7
-            }
-        ]
+        link: "/empresa",
     }
 ];
 
