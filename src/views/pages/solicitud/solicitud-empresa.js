@@ -42,6 +42,7 @@ export default {
         },
         "action",
       ],
+      
     };
   },
   mounted() {
@@ -49,12 +50,47 @@ export default {
       "Authorization"
     ] = `Bearer ${localStorage.getItem("token")}`;
     this.traerSubnivel();
+    this.probarlocal()
   },
   methods: {
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
+    },
+
+    
+    probarlocal(){
+
+        // let arrayrol = [];
+
+        // arrayrol.push({'Docente':['Crear Docente', 'Editar Docente', 'Listar Docente', 'Eliminar Docente', 'Activar Docente', 'Solicitud Empresa', 'Solicitud Inicio Actividad']})
+
+        // localStorage.setItem('rol', JSON.stringify(arrayrol));
+
+        // let roles = JSON.parse(localStorage.getItem('rol'));
+
+        let roles = JSON.parse(localStorage.getItem('roles'));
+
+        if(roles){
+        roles[0].Docente.map((p) => {
+            console.log(p);
+        
+            this.$CrearDocente =  (p === 'Crear Docente') ? true : false;
+            console.log(this.$CrearDocente)
+            this.$EditarDocente = (p === 'Editar Docente') ? true : false;
+            this.$ListarDocente = (p === 'Listar Docente') ? true : false;
+            this.$EliminarDocente = (p === 'Eliminar Docente') ? true : false;
+            this.$ActivarDocente = (p === 'Activar Docente') ? true : false;
+            this.$SolicitudEmpresa =(p === 'Solicitud Empresa') ? true : false;
+            this.$SolicitudInicioActividad = (p === 'Solicitud Inicio Actividad') ? true : false;
+            return p;
+        });
+        
+        }
+
+        
+
     },
 
     customLabel({ nombre, nivel, ano_generacion }) {

@@ -1,78 +1,112 @@
 <script>
-import {
-    required,
-    email
-  } from "vuelidate/lib/validators";
+import Vue from 'vue'
+import { required, email } from "vuelidate/lib/validators";
 import Swal from "sweetalert2";
 export default {
- 
   mounted() {
     document.body.classList.add("authentication-bg");
   },
   data() {
     return {
-       urlbackend: this.$urlBackend,
-        form: {
-          email: '',
-          password:''
-        },
-        submitted: false,
+      urlbackend: this.$urlBackend,
+      form: {
+        email: "",
+        password: "",
+      },
+      submitted: false,
     };
   },
   validations: {
-      form: {
-        email:{
-          required,
-          email
-        },
-        password:{
-          required
-        }
+    form: {
+      email: {
+        required,
+        email,
       },
-      
+      password: {
+        required,
+      },
     },
+  },
 
-    methods:{
-        formSubmit() {
-            console.log(this.form)
-            this.submitted = true;
-            // stop here if form is invalid
-            this.$v.$touch();
-            if (!this.$v.$invalid) {
-                this.axios
-              .post(`${this.urlbackend}/auth/login`, this.form)
-              .then((res) => {
-                console.log(res)
-                if (res.data.success) {
-                 console.log("Logiiin")
-                 const token = res.data.data.token;
-                 const id_estudiante_docente = res.data.data.id_estudiante;
-                 localStorage.setItem('token', token);
-                 localStorage.setItem('rol', 'estudiante');
-                 localStorage.setItem('id_estudiante_docente', id_estudiante_docente);
-                 this.$router.push('/empresa')
-                }else{
-
-                    const title = "Login";
-                    const message = "Revisa el usuario o contraseña ingresada";
-                    const type = "error";
-                    this.successmsg(title, message, type);
-
-                }
-              })
-              .catch((error) => {
-                console.log("error", error);
-                const title = "Login";
-                const message = "Revisa el usuario o contraseña ingresada";
-                const type = "error";
-                this.successmsg(title, message, type);
+  methods: {
+    formSubmit() {
+      console.log(this.form);
+      this.submitted = true;
+      // stop here if form is invalid
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        this.axios
+          .post(`${this.urlbackend}/auth/login`, this.form)
+          .then((res) => {
+            console.log(res);
+            if (res.data.success) {
+              console.log("Logiiin");
+              const token = res.data.data.token;
+              const id_estudiante_docente = res.data.data.id_estudiante;
+              localStorage.setItem("token", token);
+              localStorage.setItem("rol", "estudiante");
+              localStorage.setItem(
+                "id_estudiante_docente",
+                id_estudiante_docente
+              );
+              let arrayrol = [];
+              arrayrol.push({
+                Docente: [
+                  "Crear Docente",
+                  "Editar Docente",
+                  "Listar Docente",
+                  "Eliminar Docente",
+                  "Activar Docente",
+                  "Solicitud Empresa",
+                  "Solicitud Inicio Actividad",
+                ],
               });
+
+              localStorage.setItem('roles', JSON.stringify(arrayrol));
+
+              arrayrol[0].Docente.map((p) => {
+                console.log(p);
+
+                if(p == 'Crear Docente'){
+                  console.log(p);
+                  Vue.prototype.$CrearDocente = true;
+                }else if (p == 'Editar Docente'){
+                  Vue.prototype.$EditarDocente = false;
+                }else if (p == 'Listar Docente'){
+                  Vue.prototype.$ListarDocente = true;
+                }else if (p == 'Eliminar Docente'){
+                  Vue.prototype.$EliminarDocente = true;
+                }else if (p == 'Activar Docente'){
+                  Vue.prototype.$ActivarDocente = true;
+                }else if (p == 'Solicitud Empresa'){
+                  Vue.prototype.$SolicitudEmpresa = true;
+                }else if (p == 'Solicitud Inicio Actividad'){
+                  Vue.prototype.$SolicitudInicioActividad = true;
+                }
+                return p;
+              });
+
+              this.$router.push("/empresa");
+            } else {
+              const title = "Login";
+              const message = "Revisa el usuario o contraseña ingresada";
+              const type = "error";
+              this.successmsg(title, message, type);
             }
-        },
-        successmsg(title, message, type) {
-            Swal.fire(title, message, type);
-        },
-    }
+          })
+          .catch((error) => {
+            console.log("error", error);
+            const title = "Login";
+            const message = "Revisa el usuario o contraseña ingresada";
+            const type = "error";
+            this.successmsg(title, message, type);
+          });
+      }
+    },
+    successmsg(title, message, type) {
+      Swal.fire(title, message, type);
+    },
+  },
 };
 </script>
 
@@ -119,19 +153,20 @@ export default {
                         placeholder="usuario@correo.com"
                         v-model="form.email"
                         :class="{
-                        'is-invalid': submitted && $v.form.email.$error,
+                          'is-invalid': submitted && $v.form.email.$error,
                         }"
                       />
                       <div
-                            v-if="submitted && $v.form.email.$error"
-                            class="invalid-feedback"
+                        v-if="submitted && $v.form.email.$error"
+                        class="invalid-feedback"
+                      >
+                        <span v-if="!$v.form.email.required"
+                          >Email requerido.</span
                         >
-                            <span v-if="!$v.form.email.required">Email requerido.</span>
-                            <span v-if="!$v.form.email.email"
-                            >Ingrese un email valido.</span
-                            >
-                        
-                    </div>
+                        <span v-if="!$v.form.email.email"
+                          >Ingrese un email valido.</span
+                        >
+                      </div>
                     </div>
 
                     <div class="mb-3">
@@ -148,17 +183,17 @@ export default {
                         v-model="form.password"
                         placeholder="**********"
                         :class="{
-                        'is-invalid': submitted && $v.form.password.$error,
+                          'is-invalid': submitted && $v.form.password.$error,
                         }"
                       />
                       <div
-                            v-if="submitted && $v.form.password.$error"
-                            class="invalid-feedback"
+                        v-if="submitted && $v.form.password.$error"
+                        class="invalid-feedback"
+                      >
+                        <span v-if="!$v.form.password.required"
+                          >Contraseña requerida.</span
                         >
-                            <span v-if="!$v.form.password.required"
-                            >Contraseña requerida.</span
-                            >
-                        </div>
+                      </div>
                     </div>
 
                     <div class="mt-3 text-end">
@@ -166,24 +201,24 @@ export default {
                         class="btn btn-primary w-sm waves-effect waves-light"
                         type="submit"
                       >
-                      <i class="mdi mdi-login-variant"></i>
+                        <i class="mdi mdi-login-variant"></i>
                         Ingresar
                       </button>
                     </div>
-                    <hr>
+                    <hr />
                     <p>
-                © {{ new Date().getFullYear() }} Desarrollado por 
-                <i class="mdi mdi-checkbox-marked-circle-outline text-primary"></i> CENTO - Servicios Informaticos.
-              </p>
-                   
+                      © {{ new Date().getFullYear() }} Desarrollado por
+                      <i
+                        class="mdi mdi-checkbox-marked-circle-outline text-primary"
+                      ></i>
+                      CENTO - Servicios Informaticos.
+                    </p>
                   </form>
                 </div>
               </div>
             </div>
 
-            <div class="mt-5 text-center">
-              
-            </div>
+            <div class="mt-5 text-center"></div>
           </div>
         </div>
       </div>

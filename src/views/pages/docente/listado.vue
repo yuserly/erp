@@ -12,6 +12,7 @@
               type="button"
               class="btn btn-success waves-effect waves-light float-end"
               v-b-modal.creardocente
+              v-if="pcreardocente"
               @click="modal=true"
             >
               Crear docente

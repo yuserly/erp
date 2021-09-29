@@ -27,6 +27,11 @@ export default {
       titlemodal: "Crear Docente",
       modal: false,
       emailexist: false,
+      // permiso
+
+      pcreardocente: this.$CrearDocente,
+      editardocente: this.$EditarDocente,
+      eliminardocente: this.$EliminarDocente,
 
       // tabla
 
@@ -94,6 +99,7 @@ export default {
     this.traerSubnivel();
     // Set the initial number of items
     this.totalRows = this.items.length;
+    console.log(this.pcreardocente);
   },
   methods: {
     traerData() {
