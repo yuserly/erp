@@ -11,6 +11,7 @@ export default {
   data() {
     return {
       menuItems: menuItems,
+      rol: this.$rol
     };
   },
   props: {
@@ -237,12 +238,13 @@ export default {
         <!-- Left Menu Start -->
         <ul class="metismenu list-unstyled" id="side-menu">
           <template v-for="item in menuItems">
-            <li class="menu-title" v-if="item.isTitle" :key="item.id">
+            <li class="menu-title" v-if="item.isTitle && item.permiso" :key="item.id">
               {{ $t(item.label) }}
             </li>
-            <li v-if="!item.isTitle && !item.isLayout" :key="item.id">
+            <li v-if="!item.isTitle && !item.isLayout && item.permiso" :key="item.id">
+              
               <a
-                v-if="hasItems(item)"
+                v-if="hasItems(item) "
                 href="javascript:void(0);"
                 class="is-parent"
                 :class="{
@@ -275,15 +277,15 @@ export default {
               </router-link>
 
               <ul v-if="hasItems(item)" class="sub-menu" aria-expanded="false">
-                <li v-for="(subitem, index) of item.subItems" :key="index">
+                <li v-for="(subitem, index) of item.subItems" :key="index" >
                   <router-link
                     :to="subitem.link"
-                    v-if="!hasItems(subitem)"
+                    v-if="!hasItems(subitem) && subitem.permiso"
                     class="side-nav-link-ref"
                     >{{ $t(subitem.label) }}</router-link
                   >
                   <a
-                    v-if="hasItems(subitem)"
+                    v-if="hasItems(subitem) && subitem.permiso"
                     class="side-nav-link-a-ref has-arrow"
                     href="javascript:void(0);"
                     >{{ $t(subitem.label) }}</a

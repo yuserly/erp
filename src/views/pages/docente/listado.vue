@@ -73,7 +73,7 @@
               >
                 <template v-slot:cell(action)="data">
                   <ul class="list-inline mb-0">
-                    <li class="list-inline-item">
+                    <li class="list-inline-item" v-if="editardocente">
                       <a
                         href="javascript:void(0);"
                         v-on:click="editar(data.item)"
@@ -87,7 +87,7 @@
                         <i class="uil uil-pen font-size-18"></i>
                       </a>
                     </li>
-                    <li class="list-inline-item">
+                    <li class="list-inline-item" v-if="eliminardocente">
                       <a
                         href="javascript:void(0);"
                         v-on:click="eliminar(data.item)"

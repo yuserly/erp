@@ -94,8 +94,8 @@
                       class="list-inline-item"
                       v-if="data.item.estado_id == 3"
                     >
-                      <router-link :to="'formulario/' + data.item.id_empresa">
-                        <a class="px-2 text-primary" title="Formulario">
+                      <router-link :to="'f4415/' + data.item.id_empresa">
+                        <a class="px-2 text-primary" title="Formulario 4415">
                           <i class="uil uil-arrow-right font-size-18"></i>
                         </a>
                       </router-link>

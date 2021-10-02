@@ -27,6 +27,14 @@ export default {
       submitted: false,
       typeform: "create",
       divButton: true,
+
+      // permiso
+
+      crearproveedor: this.$CrearProveedor,
+      listarproveedor: this.$ListarProveedor,
+      editarproveedor: this.$EditarProveedor,
+      eliminarproveedor: this.$EliminarProveedor,
+
       // tabla
 
       tableData: [],

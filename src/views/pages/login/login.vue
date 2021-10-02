@@ -1,5 +1,5 @@
 <script>
-import Vue from 'vue'
+import Vue from "vue";
 import { required, email } from "vuelidate/lib/validators";
 import Swal from "sweetalert2";
 export default {
@@ -40,53 +40,98 @@ export default {
           .then((res) => {
             console.log(res);
             if (res.data.success) {
-              console.log("Logiiin");
+              // console.log("Logiiin");
               const token = res.data.data.token;
-              const id_estudiante_docente = res.data.data.id_estudiante;
+              const rol = btoa(res.data.data.rol[0]);
+              const nrol = btoa("rol");
+              // const id_estudiante_docente = res.data.data.id_estudiante;
               localStorage.setItem("token", token);
-              localStorage.setItem("rol", "estudiante");
-              localStorage.setItem(
-                "id_estudiante_docente",
-                id_estudiante_docente
-              );
-              let arrayrol = [];
-              arrayrol.push({
-                Docente: [
-                  "Crear Docente",
-                  "Editar Docente",
-                  "Listar Docente",
-                  "Eliminar Docente",
-                  "Activar Docente",
-                  "Solicitud Empresa",
-                  "Solicitud Inicio Actividad",
-                ],
-              });
+              localStorage.setItem(nrol, rol);
 
-              localStorage.setItem('roles', JSON.stringify(arrayrol));
+              let permisos = JSON.stringify(res.data.data.permisos);
 
-              arrayrol[0].Docente.map((p) => {
-                console.log(p);
+              const nperm = btoa("permisos");
 
-                if(p == 'Crear Docente'){
-                  console.log(p);
+              localStorage.setItem(nperm, btoa(permisos));
+
+              Vue.prototype.$rol = res.data.data.rol[0];
+
+              res.data.data.permisos.map((p) => {
+                if (p.name == "Crear Docente") {
                   Vue.prototype.$CrearDocente = true;
-                }else if (p == 'Editar Docente'){
-                  Vue.prototype.$EditarDocente = false;
-                }else if (p == 'Listar Docente'){
+                } else if (p.name == "Editar Docente") {
+                  Vue.prototype.$EditarDocente = true;
+                } else if (p.name == "Listar Docente") {
                   Vue.prototype.$ListarDocente = true;
-                }else if (p == 'Eliminar Docente'){
+                } else if (p.name == "Eliminar Docente") {
                   Vue.prototype.$EliminarDocente = true;
-                }else if (p == 'Activar Docente'){
+                } else if (p.name == "Activar Docente") {
                   Vue.prototype.$ActivarDocente = true;
-                }else if (p == 'Solicitud Empresa'){
+                } else if (p.name == "Solicitud Empresa") {
                   Vue.prototype.$SolicitudEmpresa = true;
-                }else if (p == 'Solicitud Inicio Actividad'){
+                } else if (p.name == "Solicitud Inicio Actividad") {
                   Vue.prototype.$SolicitudInicioActividad = true;
+                } else if (p.name == "Crear SubNivel") {
+                  Vue.prototype.$CrearSubNivel = true;
+                } else if (p.name == "Editar SubNivel") {
+                  Vue.prototype.$EditarSubNivel = true;
+                } else if (p.name == "Listar SubNivel") {
+                  Vue.prototype.$ListarSubNivel = true;
+                } else if (p.name == "Eliminar SubNivel") {
+                  Vue.prototype.$EliminarSubNivel = true;
+                } else if (p.name == "Activar SubNivel") {
+                  Vue.prototype.$ActivarSubNivel = true;
+                } else if (p.name == "Crear Estudiante") {
+                  Vue.prototype.$CrearEstudiante = true;
+                } else if (p.name == "Editar Estudiante") {
+                  Vue.prototype.$EditarEstudiante = true;
+                } else if (p.name == "Listar Estudiante") {
+                  Vue.prototype.$ListarEstudiante = true;
+                } else if (p.name == "Activar Estudiante") {
+                  Vue.prototype.$ActivarEstudiante = true;
+                } else if (p.name == "Crear Act. Economica") {
+                  Vue.prototype.$CrearActEconomica = true;
+                } else if (p.name == "Editar Act. Economica") {
+                  Vue.prototype.$EditarActEconomica = true;
+                } else if (p.name == "Listar Act. Economica") {
+                  Vue.prototype.$ListarActEconomica = true;
+                } else if (p.name == "Eliminar Act. Economica") {
+                  Vue.prototype.$EliminarActEconomica = true;
+                } else if (p.name == "Crear Proveedor") {
+                  Vue.prototype.$CrearProveedor = true;
+                } else if (p.name == "Editar Proveedor") {
+                  Vue.prototype.$EditarProveedor = true;
+                } else if (p.name == "Listar Proveedor") {
+                  Vue.prototype.$ListarProveedor = true;
+                } else if (p.name == "Eliminar Proveedor") {
+                  Vue.prototype.$EliminarProveedor = true;
+                } else if (p.name == "Activar Proveedor") {
+                  Vue.prototype.$ActivarProveedor = true;
+                } else if (p.name == "Crear Producto Proveedor") {
+                  Vue.prototype.$CrearProductoProveedor = true;
+                } else if (p.name == "Editar Producto Proveedor") {
+                  Vue.prototype.$EditarProductoProveedor = true;
+                } else if (p.name == "Listar Producto Proveedor") {
+                  Vue.prototype.$ListarProductoProveedor = true;
+                } else if (p.name == "Eliminar Producto Proveedor") {
+                  Vue.prototype.$EliminarProductoProveedor = true;
+                } else if (p.name == "Crear Empresa") {
+                  Vue.prototype.$CrearEmpresa = true;
+                } else if (p.name == "Editar Empresa") {
+                  Vue.prototype.$EditarEmpresa = true;
                 }
                 return p;
               });
 
-              this.$router.push("/empresa");
+              if (res.data.data.rol[0] === "Estudiante") {
+                this.$router.push("/empresa");
+              } else if (res.data.data.rol[0] === "Administrador") {
+                this.$router.push("/niveles");
+              } else if (res.data.data.rol[0] === "Docente") {
+                this.$router.push("/solicitud-empresa");
+              }
+
+              // this.$router.push("/empresa");
             } else {
               const title = "Login";
               const message = "Revisa el usuario o contraseña ingresada";

@@ -99,7 +99,6 @@ export default {
     this.traerSubnivel();
     // Set the initial number of items
     this.totalRows = this.items.length;
-    console.log(this.pcreardocente);
   },
   methods: {
     traerData() {

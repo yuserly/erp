@@ -87,6 +87,13 @@ export default {
       typesubmit: false,
       modal: false,
       titlemodal: "",
+
+       // permiso
+
+       crearsubnivel: this.$CrearSubNivel,
+       listarsubnivel: this.$ListarSubNivel,
+       editarsubnivel: this.$EditarSubnivel,
+       eliminarsubnivel: this.$EliminarSubnivel,
     };
   },
 

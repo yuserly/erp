@@ -66,9 +66,7 @@ const routes = [
     path: "/actividad_economica",
     name: "actividad economica",
     component: () =>
-      import(
-        /* webpackChunkName: "home" */ "../views/pages/giros/giro.vue"
-      ),
+      import(/* webpackChunkName: "home" */ "../views/pages/giros/giro.vue"),
     meta: { requiresAuth: true },
   },
   {
@@ -100,21 +98,36 @@ const routes = [
     path: "/editar-empresa/:id",
     name: "editar empresa",
     component: () =>
-      import(/* webpackChunkName: "home" */ "../views/pages/empresas/editar-empresa.vue"),
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/empresas/editar-empresa.vue"
+      ),
     meta: { requiresAuth: true },
   },
   {
     path: "/solicitud-empresa",
     name: "solicitud empresa",
     component: () =>
-      import(/* webpackChunkName: "home" */ "../views/pages/solicitud/solicitud-empresa.vue"),
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/solicitud/solicitud-empresa.vue"
+      ),
     meta: { requiresAuth: true },
   },
   {
     path: "/ver-solicitud/:id",
     name: "ver solicitud",
     component: () =>
-      import(/* webpackChunkName: "home" */ "../views/pages/solicitud/ver-solicitud.vue"),
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/solicitud/ver-solicitud.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/f4415/:id",
+    name: "formulario f4415",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/formularios/f4415.vue"
+      ),
     meta: { requiresAuth: true },
   },
 ];
@@ -141,9 +154,33 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   //A Logged-in user can't go to login page again
   if (to.name === "login" && localStorage.getItem("token")) {
-    router.push({
-      name: "login",
-    });
+    let rol = atob(localStorage.getItem('cm9s'));
+        
+
+        if(rol === "Estudiante" ){
+
+          router.push({
+            name: "empresa",
+          });
+
+        }else if(rol === "Administrador" ){
+
+          router.push({
+            name: "niveles",
+          });
+        }
+        else if(rol === "Docente" ){
+
+          router.push({
+            name: "solicitud empresa",
+          });
+        }else{
+
+          router.push({
+            name: "listado docente",
+          });
+
+        }
 
     //the route requires authentication
   } else if (to.matched.some((record) => record.meta.requiresAuth)) {
@@ -157,9 +194,29 @@ router.beforeEach((to, from, next) => {
       });
     } else {
       if (!hasAccess(to.name)) {
-        router.push({
-          name: "empresa",
-        });
+
+        let rol = atob(localStorage.getItem('cm9s'));
+        
+
+        if(rol === "Estudiante" ){
+
+          router.push({
+            name: "empresa",
+          });
+
+        }else if(rol === "Administrador" ){
+
+          router.push({
+            name: "niveles",
+          });
+        }
+        else if(rol === "Docente" ){
+
+          router.push({
+            name: "solicitud empresa",
+          });
+        }
+        
       }
     }
   }
@@ -168,83 +225,90 @@ router.beforeEach((to, from, next) => {
 });
 
 function hasAccess(name) {
-  const rol = localStorage.getItem("rol");
+  const rol = atob(localStorage.getItem('cm9s'));
 
   switch (name) {
     case "empresa":
-      if (rol == "estudiante") {
+      if (rol == "Estudiante") {
         return true;
       } else {
         return false;
       }
 
     case "crear empresa":
-      if (rol == "estudiante") {
+      if (rol == "Estudiante") {
         return true;
       } else {
         return false;
       }
-      case "producto proveedor":
-        if (rol == "estudiante") {
-          return true;
-        } else {
-          return false;
-        }
+    case "producto proveedor":
+      if (rol == "Administrador" || rol == "Docente") {
+        return true;
+      } else {
+        return false;
+      }
 
-      case "actividad economica":
-        if (rol == "estudiante") {
-          return true;
-        } else {
-          return false;
-        }
-        case "gestion proveedor":
-          if (rol == "estudiante") {
-            return true;
-          } else {
-            return false;
-          }
+    case "actividad economica":
+      if (rol == "Administrador" || rol == "Docente") {
+        return true;
+      } else {
+        return false;
+      }
+    case "gestion proveedor":
+      if (rol == "Administrador" || rol == "Docente") {
+        return true;
+      } else {
+        return false;
+      }
 
     case "niveles":
-    if (rol == "estudiante") {
-    return true;
-    } else {
-    return false;
-    }
+      if (rol == "Administrador") {
+        return true;
+      } else {
+        return false;
+      }
 
     case "listado docente":
-    if (rol == "estudiante") {
-    return true;
-    } else {
-    return false;
-    }
+      if (rol == "Administrador") {
+        return true;
+      } else {
+        return false;
+      }
 
     case "listado alumno":
-    if (rol == "estudiante") {
-    return true;
-    } else {
-    return false;
-    }
+      if (rol == "Administrador" || rol == "Docente") {
+        return true;
+      } else {
+        return false;
+      }
 
     case "editar empresa":
-    if (rol == "estudiante") {
-    return true;
-    } else {
-    return false;
-    }
+      if (rol == "Estudiante") {
+        return true;
+      } else {
+        return false;
+      }
 
     case "solicitud empresa":
-    if (rol == "estudiante") {
-    return true;
-    } else {
-    return false;
-    }
+      if (rol == "Administrador" || rol == "Docente") {
+        return true;
+      } else {
+        return false;
+      }
 
     case "ver solicitud":
-    if (rol == "estudiante") {
-    return true;
-    } else {
-    return false;
-    }
+      if (rol == "Administrador" || rol == "Docente") {
+        return true;
+      } else {
+        return false;
+      }
+
+    case "formulario f4415":
+      if (rol == "Administrador" || rol == "Docente" || rol == "Estudiante") {
+        return true;
+      } else {
+        return false;
+      }
 
     default:
       return false;
@@ -252,128 +316,3 @@ function hasAccess(name) {
 }
 
 export default router;
-
-// INFORMACION DE LA PLANTILLA
-
-// import Vue from 'vue'
-// import VueRouter from 'vue-router'
-
-// import VueMeta from 'vue-meta'
-// import store from '@/state/store'
-
-// import routes from './routes'
-
-// Vue.use(VueRouter)
-// Vue.use(VueMeta, {
-//     // The component option name that vue-meta looks for meta info on.
-//     keyName: 'page',
-// })
-
-// const router = new VueRouter({
-//     routes,
-//     // Use the HTML5 history API (i.e. normal-looking routes)
-//     // instead of routes with hashes (e.g. example.com/#/about).
-//     // This may require some server configuration in production:
-//     // https://router.vuejs.org/en/essentials/history-mode.html#example-server-configurations
-//     mode: 'history',
-//     scrollBehavior(to, from, savedPosition) {
-//         if (savedPosition) {
-//             return savedPosition
-//         } else {
-//             return {
-//                 x: 0,
-//                 y: 0
-//             }
-//         }
-//     },
-// })
-
-// // Before each route evaluates...
-// router.beforeEach((routeTo, routeFrom, next) => {
-//     if (process.env.VUE_APP_DEFAULT_AUTH === "firebase") {
-//         // Check if auth is required on this route
-//         // (including nested routes).
-//         const authRequired = routeTo.matched.some((route) => route.meta.authRequired)
-
-//         // If auth isn't required for the route, just continue.
-//         if (!authRequired) return next()
-
-//         // If auth is required and the user is logged in...
-//         if (store.getters['auth/loggedIn']) {
-//             // Validate the local user token...
-//             return store.dispatch('auth/validate').then((validUser) => {
-//                 // Then continue if the token still represents a valid user,
-//                 // otherwise redirect to login.
-//                 validUser ? next() : redirectToLogin()
-//             })
-//         }
-
-//         // If auth is required and the user is NOT currently logged in,
-//         // redirect to login.
-//         redirectToLogin()
-
-//         // eslint-disable-next-line no-unused-vars
-//         // eslint-disable-next-line no-inner-declarations
-//         function redirectToLogin() {
-//             // Pass the original route to the login component
-//             next({
-//                 name: 'login',
-//                 query: {
-//                     redirectFrom: routeTo.fullPath
-//                 }
-//             })
-//         }
-//     } else if (process.env.VUE_APP_DEFAULT_AUTH === "fakebackend") {
-//         const publicPages = ['/login', '/register', '/forgot-password'];
-//         const authpage = !publicPages.includes(routeTo.path);
-//         const loggeduser = localStorage.getItem('user');
-
-//         if (authpage && !loggeduser) {
-//             return next('/login');
-//         }
-
-//         next();
-//     }
-// })
-
-// router.beforeResolve(async (routeTo, routeFrom, next) => {
-//     // Create a `beforeResolve` hook, which fires whenever
-//     // `beforeRouteEnter` and `beforeRouteUpdate` would. This
-//     // allows us to ensure data is fetched even when params change,
-//     // but the resolved route does not. We put it in `meta` to
-//     // indicate that it's a hook we created, rather than part of
-//     // Vue Router (yet?).
-//     try {
-//         // For each matched route...
-//         for (const route of routeTo.matched) {
-//             await new Promise((resolve, reject) => {
-//                 // If a `beforeResolve` hook is defined, call it with
-//                 // the same arguments as the `beforeEnter` hook.
-//                 if (route.meta && route.meta.beforeResolve) {
-//                     route.meta.beforeResolve(routeTo, routeFrom, (...args) => {
-//                         // If the user chose to redirect...
-//                         if (args.length) {
-//                             // If redirecting to the same route we're coming from...
-//                             // Complete the redirect.
-//                             next(...args)
-//                             reject(new Error('Redirected'))
-//                         } else {
-//                             resolve()
-//                         }
-//                     })
-//                 } else {
-//                     // Otherwise, continue resolving the route.
-//                     resolve()
-//                 }
-//             })
-//         }
-//         // If a `beforeResolve` hook chose to redirect, just return.
-//     } catch (error) {
-//         return
-//     }
-
-//     // If we reach this point, continue resolving the route.
-//     next()
-// })
-
-// export default router

@@ -173,7 +173,7 @@
       </div>
 
 
-      <div class="col-lg-12" v-if="modeSelectProveedor === true">
+      <div class="col-lg-12" v-if="modeSelectProveedor === true && listarproductoproveedor">
         <div class="card">
           <div class="card-body">
 
@@ -226,7 +226,7 @@
               >
                 <template v-slot:cell(action)="data">
                   <ul class="list-inline mb-0">
-                    <li class="list-inline-item">
+                    <li class="list-inline-item" v-if="editarproductoproveedor">
                       <a
                         href="javascript:void(0);"
                         v-on:click="editar(data.item)"
@@ -240,7 +240,7 @@
                         <i class="uil uil-pen font-size-18"></i>
                       </a>
                     </li>
-                    <li class="list-inline-item">
+                    <li class="list-inline-item" v-if="eliminarproductoproveedor">
                       <a
                         href="javascript:void(0);"
                         v-on:click="eliminar(data.item)"

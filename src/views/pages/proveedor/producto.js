@@ -29,6 +29,12 @@ export default {
       modeSelectProveedor: false,
       divButton: true,
 
+      // permiso
+      crearproductoproveedor: this.$CrearProductoProveedor,
+      listarproductoproveedor: this.$ListarProductoProveedor,
+      editarproductoproveedor: this.$EditarProductoProveedor,
+      eliminarproductoproveedor: this.$EliminarProductoProveedor,
+
       // tabla
 
       tableData: [],

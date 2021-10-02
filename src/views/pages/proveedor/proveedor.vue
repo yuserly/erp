@@ -12,8 +12,8 @@
                   <h4 class="card-title">Gestión Proveedores</h4>
               </div>
               <div class="col-6 d-flex flex-row-reverse bd-highlight">
-                  <h4 v-if="divButton === true" class="card-title">Nuevo Proveedor</h4>
-                  <h4 v-else class="card-title">Editar Proveedor</h4>
+                  <h4 v-if="divButton === true && crearproveedor" class="card-title">Nuevo Proveedor</h4>
+                  <h4 v-if="divButton === false && editarproveedor" class="card-title">Editar Proveedor</h4>
               </div>
             </div>
             
@@ -206,7 +206,7 @@
         
         </div>
       </div>
-      <div class="col-lg-12">
+      <div class="col-lg-12" v-if="listarproveedor">
         <div class="card">
           <div class="card-body">
 
@@ -259,7 +259,7 @@
               >
                 <template v-slot:cell(action)="data">
                   <ul class="list-inline mb-0">
-                    <li class="list-inline-item">
+                    <li class="list-inline-item" v-if="editarproveedor">
                       <a
                         href="javascript:void(0);"
                         v-on:click="editar(data.item)"
@@ -273,7 +273,7 @@
                         <i class="uil uil-pen font-size-18"></i>
                       </a>
                     </li>
-                    <li class="list-inline-item">
+                    <li class="list-inline-item" v-if="eliminarproveedor">
                       <a
                         href="javascript:void(0);"
                         v-on:click="eliminar(data.item)"

@@ -70,6 +70,7 @@
                     v-b-modal.crearnivel
                     data-toggle="modal"
                     data-target=".bs-example-crearnivel"
+                    v-if="crearsubnivel"
                     v-on:click="
                       creasubnivel(data.item.id_nivel, data.item.nombre)
                     "
@@ -82,7 +83,7 @@
           </div>
         </div>
       </div>
-      <div class="col-12 col-lg-6">
+      <div class="col-12 col-lg-6"  v-if="listarsubnivel">
         <div class="card ">
           <div class="card-header">
             Subniveles
@@ -137,7 +138,7 @@
               >
                 <template v-slot:cell(action)="data">
                   <ul class="list-inline mb-0">
-                    <li class="list-inline-item">
+                    <li class="list-inline-item" v-if="editarsubnivel">
                       <a
                         href="javascript:void(0);"
                         v-on:click="editar(data.item)"
@@ -151,7 +152,7 @@
                         <i class="uil uil-pen font-size-18"></i>
                       </a>
                     </li>
-                    <li class="list-inline-item">
+                    <li class="list-inline-item" v-if="eliminarsubnivel">
                       <a
                         href="javascript:void(0);"
                         v-on:click="eliminar(data.item)"
