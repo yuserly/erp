@@ -51,7 +51,7 @@ export default {
           console.log(response);
           this.id_empresa = response.data.id_empresa;
           this.rut_empresa = response.data.rut_empresa;
-          this.rut_represetante = response.data.rut_represetante;
+          this.rut_represetante = response.data.rut_representante;
           this.razon_social = response.data.razon_social;
           this.nombre_fantasia = response.data.nombre_fantasia;
           this.celular = response.data.celular;
@@ -59,9 +59,11 @@ export default {
           this.capital_inicial = response.data.capital_inicial;
           this.tipo_empresa = response.data.tipo_empresa.nombre;
         });
+        
+        const tipoalerta = 1;
 
       this.axios
-        .get(`${this.urlbackend}/empresa/alertaempresa/${this.id}`)
+        .get(`${this.urlbackend}/empresa/alertaempresa/${this.id}/${tipoalerta}`)
         .then((response) => {
           console.log(response);
 

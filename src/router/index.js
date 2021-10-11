@@ -113,6 +113,15 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/solicitud-actividades",
+    name: "solicitud actividades",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/solicitud/solicitud-4415.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/ver-solicitud/:id",
     name: "ver solicitud",
     component: () =>
@@ -127,6 +136,15 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "home" */ "../views/pages/formularios/f4415.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/ver-solicitud-4415/:id",
+    name: "ver solicitud 4415",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/solicitud/ver-solicitud-4415.vue"
       ),
     meta: { requiresAuth: true },
   },
@@ -305,6 +323,20 @@ function hasAccess(name) {
 
     case "formulario f4415":
       if (rol == "Administrador" || rol == "Docente" || rol == "Estudiante") {
+        return true;
+      } else {
+        return false;
+      }
+
+    case "solicitud actividades":
+      if (rol == "Administrador" || rol == "Docente") {
+        return true;
+      } else {
+        return false;
+      }
+
+      case "ver solicitud 4415":
+      if (rol == "Administrador" || rol == "Docente") {
         return true;
       } else {
         return false;

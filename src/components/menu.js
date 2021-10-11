@@ -65,6 +65,7 @@ export const menuItems = [
       },
     ],
   },
+  
   {
     id: 3,
     label: "Plataforma",
@@ -86,4 +87,28 @@ export const menuItems = [
       },
     ],
   },
+
+  {
+    id: 5,
+    label: "Gestión Empresas",
+    icon: "fas fa-network-wired",
+    permiso: Vue.prototype.$ListarProductoProveedor,
+    subItems: [
+      {
+        id: 5.1,
+        label: "Solicitud Empresa",
+        link: "/solicitud-empresa",
+        parentId: 5,
+        permiso: Vue.prototype.$SolicitudEmpresa,
+      },
+      {
+        id: 5.2,
+        label: "Solicitud Inicio Act.",
+        link: "/solicitud-actividades",
+        parentId: 5,
+        permiso: Vue.prototype.$SolicitudInicioActividad,
+      }
+    ],
+  },
+ 
 ];
