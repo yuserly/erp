@@ -13,13 +13,13 @@ export default {
       urlbackend: this.$urlBackend,
       // tabla
       tableData: [],
-      title: "Empresas",
+      title: "Solicitud Inicio Act",
       items: [
         {
           text: "Tables",
         },
         {
-          text: "Solicitud Empresa",
+          text: "Solicitud Inicio Act.",
           active: true,
         },
       ],
@@ -50,6 +50,7 @@ export default {
       "Authorization"
     ] = `Bearer ${localStorage.getItem("token")}`;
     this.traerSubnivel();
+   
   },
   methods: {
     onFiltered(filteredItems) {
@@ -72,16 +73,16 @@ export default {
     traerbusqueda() {
       this.axios
         .get(
-          `${this.urlbackend}/empresa/obtenersolicitud/${this.subnivelbusqueda.id_subnivel}`
+          `${this.urlbackend}/empresa/solicitudform4415/${this.subnivelbusqueda.id_subnivel}`
         )
         .then((response) => {
           console.log(response);
           response.data.map((p) => {
 
-            const nombreestudiante = `${p.empresa.estudiante.nombres} ${p.empresa.estudiante.apellidos}`;
+            const nombreestudiante = `${p.inicio_actividad.empresa.estudiante.nombres} ${p.inicio_actividad.empresa.estudiante.apellidos}`;
 
             // crear nueva propiedad y asigno el valor
-            p["empresa"] = p.empresa.razon_social;
+            p["empresa"] = p.inicio_actividad.empresa.razon_social;
             p["estudiante"] = nombreestudiante ;
             return p;
           });

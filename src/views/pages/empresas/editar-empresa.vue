@@ -9,7 +9,7 @@
             <div class="row">
               <div class="col-6"></div>
               <div class="col-6">
-                  <label for="">Seleccione el tipo de empresa</label>
+                <label for="">Seleccione el tipo de empresa</label>
                 <multiselect
                   v-model="form.tipo_empresa"
                   track-by="id_tipoempresa"
@@ -25,12 +25,25 @@
     </div>
 
     <div class="row" v-if="form.tipo_empresa">
+      <div class="col-lg-12 mb-4">
+        <button
+          type="button"
+          class="btn btn-warning waves-effect waves-light float-end"
+          v-b-modal.vermotivo
+          @click="traermotivo()"
+        >
+          Ver motivo
+        </button>
+      </div>
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
             <form class="needs-validation" @submit.prevent="formSubmit">
               <div class="row">
-                <div class="col-md-6" v-if="form.tipo_empresa.id_tipoempresa == 1">
+                <div
+                  class="col-md-6"
+                  v-if="form.tipo_empresa.id_tipoempresa == 1"
+                >
                   <div class="mb-3">
                     <label for="rut_empresa">RUT Empresa</label>
                     <input
@@ -38,7 +51,6 @@
                       v-model="form.rut_empresa"
                       type="text"
                       class="form-control"
-                      
                     />
                   </div>
                 </div>
@@ -47,7 +59,7 @@
                     <label for="rut_representante">RUT Representante</label>
                     <input
                       id="rut_representate"
-                      v-model="form.rut_representante"
+                      v-model="form.rut_represetante"
                       type="text"
                       class="form-control"
                     />
@@ -102,7 +114,6 @@
                       v-model="form.email"
                       type="email"
                       class="form-control"
-                      
                     />
                   </div>
                 </div>
@@ -123,13 +134,13 @@
                 <div class="col-md-6">
                   <div class="mb-3">
                     <label for="docente">Docente</label>
-              
+
                     <multiselect
-                    v-model="form.docente"
-                    :options="optionsDocente"
-                    track-by="docente_id"
-                    :custom-label="customLabel"
-                  ></multiselect>
+                      v-model="form.docente"
+                      :options="optionsDocente"
+                      track-by="docente_id"
+                      :custom-label="customLabel"
+                    ></multiselect>
                   </div>
                 </div>
               </div>
@@ -142,5 +153,15 @@
         </div>
       </div>
     </div>
+
+    <b-modal
+      id="vermotivo"
+      title="Motivo de Rechaza"
+      title-class="font-18"
+    >
+      <p>
+        {{observacion}}
+      </p>
+    </b-modal>
   </Layout>
 </template>

@@ -28,6 +28,7 @@ export default {
         id_estudiante: "",
       },
       id: this.$route.params.id,
+      observacion: "",
       options: [],
       optionsDocente: [],
       submitted: false,
@@ -77,8 +78,7 @@ export default {
       this.axios
         .get(`${this.urlbackend}/empresa/obtenerempresaalumno/${this.id}`)
         .then((response) => {
-
-          console.log(response)
+          console.log(response);
           this.form.id_empresa = response.data[0].id_empresa;
           this.form.rut_empresa = response.data[0].rut_empresa;
           this.form.rut_represetante = response.data[0].rut_represetante;
@@ -135,6 +135,16 @@ export default {
             this.successmsg(title, message, type);
           });
       }
+    },
+
+    traermotivo() {
+      this.axios
+        .get(
+          `${this.urlbackend}/empresa/obtenermotivorechazo/${this.form.id_empresa}`
+        )
+        .then((response) => {
+          this.observacion = response.data.observacion;
+        });
     },
 
     successmsg(title, message, type) {

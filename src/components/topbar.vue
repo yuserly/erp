@@ -6,6 +6,7 @@ export default {
   },
   data() {
     return {
+      urlbackend: this.$urlBackend,
       languages: [
         {
           flag: require("@/assets/images/flags/us.jpg"),
@@ -40,6 +41,10 @@ export default {
     };
   },
   mounted() {
+    this.axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${localStorage.getItem("token")}`;
+
     this.value = this.languages.find((x) => x.language === this.$i18n.locale);
     this.text = this.value.title;
     this.flag = this.value.flag;
@@ -94,11 +99,28 @@ export default {
       this.text = country;
       this.flag = flag;
     },
-    logoutUser() {
-      this.logout();
-      this.$router.push({
-        path: "/account/login",
-      });
+    logout() {
+
+      this.axios
+          .post(`${this.urlbackend}/auth/logout`, [])
+          .then((res) => {
+            console.log(res);
+            if (res.data.success) {
+
+              localStorage.clear();
+
+              this.$router.push({
+                path: "/login",
+              });
+
+              location.reload(1);
+
+            }
+          })
+          .catch((error) => {
+            console.log("error", error);
+          });
+      
     },
   },
 };
@@ -327,7 +349,8 @@ export default {
  
           <a
             class="dropdown-item"
-            href="/logout"
+            href="javascript:void(0)"
+            @click="logout()"
           >
             <i
               class="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted"

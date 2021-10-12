@@ -47,7 +47,7 @@
                     <label for="rut_representante">RUT Representante</label>
                     <input
                       id="rut_representate"
-                      v-model="form.rut_representante"
+                      v-model="form.rut_represetante"
                       type="text"
                       class="form-control"
                     />
