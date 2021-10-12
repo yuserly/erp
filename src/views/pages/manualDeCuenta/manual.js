@@ -15,24 +15,37 @@ export default {
     return {
       urlbackend: this.$urlBackend,
       form: {
+        codigo: "",
         nombre: "",
-        sku: "",
         descripcion: "",
-        p_bruto: "",
-        iva: "",
-        p_neto: "",
-        id_proveedor: "",
-      }, 
+        clasificacion: null,
+        subclasificacion: null,
+        cargos: "",
+        abonos: "",
+        saldoDeudor: "",
+        saldoAcreedor: "",
+      },
+      info: {
+        codigo: "",
+        nombre: "",
+        descripcion: "",
+        clasificacion: null,
+        subclasificacion: null,
+        cargos: "",
+        abonos: "",
+        saldoDeudor: "",
+        saldoAcreedor: "",
+      },
+      clasificacion: [],
+      subclasificacion: [],
+      optiones: 'Mensaje', 
       submitted: false,
       typeform: "create",
-      modeSelectProveedor: false,
-      divButton: true,
-
-      // permiso
-      crearproductoproveedor: this.$CrearProductoProveedor,
-      listarproductoproveedor: this.$ListarProductoProveedor,
-      editarproductoproveedor: this.$EditarProductoProveedor,
-      eliminarproductoproveedor: this.$EliminarProductoProveedor,
+      titlemodal: "Nueva Cuenta",
+      titlemodalV: "Informacion Cuenta",
+      modal: false,
+      modalVer: true,
+      btnCreate: true,
 
       // tabla
 
@@ -58,8 +71,8 @@ export default {
       sortDesc: false,
       fields: [
         {
-          label: "SKU",
-          key: "sku",
+          label: "Código",
+          key: "codigo",
           sortable: true,
         },
         {
@@ -67,19 +80,14 @@ export default {
           key: "nombre",
           sortable: true,
         },
-        {  
-          label: "Precio Neto",
-          key: "neto",
-          sortable: true,
-        },
-        {  
-          label: "IVA",
-          key: "ivaL",
-          sortable: true,
-        },
         {
-          label: "Precio Bruto",
-          key: "bruto",
+          label: "Clasificación",
+          key: "clasificacionD",
+          sortable: true,
+        },
+        {  
+          label: "Sub Clasificación",
+          key: "subclasificacionD",
           sortable: true,
         },
         "action",
@@ -88,128 +96,129 @@ export default {
   },
   validations: {
     form: {
-      id_proveedor: {
+      codigo: {
         required,
       },
       nombre: {
         required,
       },
-      p_bruto: {
+      clasificacion: {
         required,
       },
-      p_neto: {
+      subclasificacion: {
         required,
       },
-      iva: {
+      abonos: {
         required,
       },
-      proveedor: {
+      cargos: {
         required,
-      }
+      },
+      salgoDeudor: {
+        required,
+      },
+      saldoAcreedor: {
+        required,
+      },
     },
   },
-  mounted() {  
-    this.traerProveedores();
+  mounted() {
+    this.traerData();
+    this.traerInformacion();
+    
+    this.totalRows = this.items.length;
   },
   methods: {
+    
+    traerData() {
+      this.axios
+        .get(`${this.urlbackend}/manualcuentasii/obterDatos`)
+        .then((response) => {
+            this.clasificacion = response.data.clasificacion;
+            this.subclasificacion = response.data.subclasificacion;
+        
+        });
+    },
+
+    traerInformacion() {
+        this.axios
+            .get(`${this.urlbackend}/manualcuentasii/obtenerInformacion`)
+            .then((res) => {
+              res.data.map((p) => {
+                p["clasificacionD"]     = p.clasificacion.nombre;
+                p["subclasificacionD"]  = p.sub_clasificacion.nombre;              
+                return p;
+              });
+              this.tableData = res.data;
+              this.totalRows = res.data.length;
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    },
+
+    modalNuevo()
+    {
+      this.modal = true;
+      this.titlemodal = "Nueva Cuenta";
+      this.form = {
+        codigo: "",
+        nombre: "",
+        descripcion: "",
+        clasificacion: "",
+        subclasificacion: "",
+        cargos: "",
+        abonos: "",
+        saldoDeudor: "",
+        saldoAcreedor: "",
+      };
+      this.btnCreate        = true;
+
+    },
+
 
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
- 
-    customLabel({razon_social}) {
-      return `${razon_social}`;
-    },
-
-    onChange(value)
-    {
-      this.form.id_proveedor = value.id_proveedor;
-      this.axios
-            .get(`${this.urlbackend}/proveedorProducto/getProductoProveedor/${this.form.id_proveedor}`, this.form)
-            .then((res) => {
-              res.data.map((p) => {
-                p["bruto"] = '$ '+p.precio_bruto;
-                p["ivaL"] = '$ '+p.iva;
-                p["neto"] = '$ '+p.precio_neto;
-                return p;
-              });
-              this.tableData = res.data;
-              this.totalRows = res.data.length;
-              this.modeSelectProveedor = true;
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    },
-
-    calcularIVABRUTO()
-    {   
-      var neto  = this.form.p_neto;
-      var iva   = neto*0.19; 
-      var bruto = parseInt(neto)+parseInt(iva);
-      
-      if(isNaN(iva)){
-        this.form.iva = 0;
-      }else{
-        this.form.iva = Math.round(iva);
-      }
-      if(isNaN(bruto)){
-        this.form.p_bruto = 0;
-      }else{
-        this.form.p_bruto = Math.round(bruto);
-      }
-
-    },
-
-    traerProducto(id)
-    {
-      this.axios
-            .get(`${this.urlbackend}/proveedorProducto/getProductoProveedor/`+id)
-            .then((res) => {
-              res.data.map((p) => {
-                p["bruto"] = '$ '+p.precio_bruto;
-                p["ivaL"] = '$ '+p.iva;
-                p["neto"] = '$ '+p.precio_neto;              
-                return p;
-              });
-              this.tableData = res.data;
-              this.totalRows = res.data.length;
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    },
 
     formSubmit() {
       this.submitted = true;
 
       this.$v.$touch();
-      if (!this.$v.$invalid) {
+
+    //   if (!this.$v.$invalid) {
         if (this.typeform == "create") {
           this.axios
-            .post(`${this.urlbackend}/proveedorProducto/crearProducto`, this.form)
+            .post(`${this.urlbackend}/manualcuentasii/store`, this.form)
             .then((res) => {
+               
               if (res.data.success) {
-                const title = "Producto";
-                const message = "Creado Exitosamente.";
+                const title = "Nueva Cuenta";
+                const message = res.data.success;
                 const type = "success";
-                
-                this.traerProducto(this.form.id_proveedor);
-                
-                this.$v.form.$reset();
-                this.form.nombre = "";
-                this.form.sku = "";
-                this.form.p_bruto = "";
-                this.form.iva = "";
-                this.form.p_neto = "";
-                this.form.descripcion = "";
 
+                this.form = {
+                    codigo: "",
+                    nombre: "",
+                    descripcion: "",
+                    clasificacion: "",
+                    subclasificacion: "",
+                    cargos: "",
+                    abonos: "",
+                    saldoDeudor: "",
+                    saldoAcreedor: "",
+                };
+
+                this.modal = false;
+
+                this.$v.form.$reset();
+                this.traerInformacion();
                 this.successmsg(title, message, type);
               }
             })
-            .catch(error => { 
+            .catch(error => {
                 console.clear();
                 $.each(error.response.data.errors, function(key, value) {
                     const Toast = Swal.mixin({
@@ -233,29 +242,36 @@ export default {
         } else if (this.typeform == "edit") {
           this.axios
             .put(
-              `${this.urlbackend}/proveedorProducto/actualizarProducto/${this.form.id_producto}`,
+              `${this.urlbackend}/manualcuentasii/update/${this.form.id_cuenta}`,
               this.form
             )
             .then((res) => {
+             
               if (res.data.success) {
-                const title = "Producto";
-                const message = "Actualizado Exitosamente";
-                const type = "success";
-                this.successmsg(title, message, type);
+                  
+                const title     = "Edición Cuenta";
+                const message   = "Actualizado Exitosamente";
+                const type      = "success";
 
-                this.traerProducto(this.form.id_proveedor);
-                
+                this.form = {
+                    codigo: "",
+                    nombre: "",
+                    descripcion: "",
+                    clasificacion: "",
+                    subclasificacion: "",
+                    cargos: "",
+                    abonos: "",
+                    saldoDeudor: "",
+                    saldoAcreedor: "",
+                };
+
+                this.modal = false;
+                this.titlemodal = "Nueva Cuenta",
+                this.traerInformacion();
                 this.$v.form.$reset();
-                this.form.nombre = "";
-                this.form.sku = "";
-                this.form.p_bruto = "";
-                this.form.iva = "";
-                this.form.p_neto = "";
-                this.form.descripcion = "";
+                this.btnCreate        = true,
 
-                this.divButton = true;
-                this.typeform = "create";
-
+                this.successmsg(title, message, type);
               }
             })
             .catch((error) => {
@@ -280,15 +296,7 @@ export default {
                 });
             });
         }
-      }
-    },
-
-    traerProveedores() {
-      this.axios
-        .get(`${this.urlbackend}/proveedorProducto/getProveedor`)
-        .then((response) => {
-            this.proveedores = response.data;
-        });
+    //   }
     },
 
     successmsg(title, message, type) {
@@ -296,29 +304,35 @@ export default {
     },
 
     editar(datos) {
+      this.modal = true;
 
       this.typeform = "edit";
-      this.form.id_producto  = datos.id_prod_proveedor;
-      this.form.sku         = datos.sku;
-      this.form.nombre      = datos.nombre;
-      this.form.p_bruto     = datos.precio_bruto;
-      this.form.p_neto      = datos.precio_neto;
-      this.form.iva         = datos.iva;
-      this.form.descripcion      =datos.descripcion;
-      this.divButton = false;
+      this.form.id_cuenta                   = datos.id_manual_cuenta;
+      this.form.codigo                      = datos.codigo;
+      this.form.nombre                      = datos.nombre;
+      this.form.descripcion                 = datos.descripcion;
+      this.form.clasificacion               = datos.clasificacion;
+      this.form.subclasificacion            = datos.sub_clasificacion;
+      this.form.cargos                      = datos.cargos;
+      this.form.abonos                      = datos.abonos;
+      this.form.saldoDeudor                 = datos.saldo_deudor;
+      this.form.saldoAcreedor               = datos.saldo_acreedor;
+      this.btnCreate        = false,
+      (this.titlemodal    = "Editar Cuenta");
     },
 
-    cancelar()
-    {
-        this.divButton = true;
-        this.typeform = "create";
-        this.$v.form.$reset();
-        this.form.nombre = "";
-        this.form.sku = "";
-        this.form.p_bruto = "";
-        this.form.iva = "";
-        this.form.p_neto = "";
-        this.form.descripcion = "";
+    verCuenta(datos){
+        this.modalVer = true;
+        this.info.codigo            = '-'+datos.codigo;
+        this.info.nombre            = '-'+datos.nombre;
+        this.info.descripcion       = '-'+datos.descripcion;
+        this.info.clasificacion     = '-'+datos.clasificacion.nombre;
+        this.info.subclasificacion  = '-'+datos.sub_clasificacion.nombre;
+        this.info.cargos            = '-'+datos.cargos;
+        this.info.abonos            = '-'+datos.abonos;
+        this.info.saldoDeudor       = '-'+datos.saldo_deudor;
+        this.info.saldoAcreedor     = '-'+datos.saldo_acreedor;
+        (this.titlemodalV    = "Información Cuenta");
     },
 
     eliminar(datos) {
@@ -367,5 +381,6 @@ export default {
         }
       });
     },
+
   },
 };

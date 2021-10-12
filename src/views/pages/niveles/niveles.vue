@@ -41,7 +41,7 @@
                     <b-form-input
                       v-model="filterN"
                       type="search"
-                      placeholder="Buscar..."
+                      placeholder="Buscar..." 
                       class="form-control form-control-sm ms-2"
                     ></b-form-input>
                   </label>

@@ -188,15 +188,15 @@
             </div>
             <div class="btnCreate" v-if="divButton === true">
               <button class="btn btn-primary float-end btnSubmit" type="submit" disabled> 
-                  Crear Proveedor
+                  <i class="far fa-save"></i> Crear Proveedor
               </button>
             </div>
             <div class="btnUpdate" v-else>
               <button class="btn btn-primary float-end btnSubmit" style="margin-left: 10px;" type="submit" disabled> 
-                  Actualizar Proveedor
+                  <i class="fas fa-sync"></i> Actualizar Proveedor
               </button>
               <button class="btn btn-danger float-end" type="button" v-on:click="cancelar"> 
-                  Cancelar
+                  <i class="fas fa-ban"></i> Cancelar
               </button>
             </div>
             

@@ -6,7 +6,7 @@
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Docentes</h4>
+            <h4 class="card-title">Gestión Docentes</h4>
 
             <button
               type="button"
@@ -14,8 +14,8 @@
               v-b-modal.creardocente
               v-if="pcreardocente"
               @click="modal=true"
-            >
-              Crear docente
+            ><i class="fas fa-plus-circle"></i>
+              Nuevo Docente
             </button>
           </div>
         </div>

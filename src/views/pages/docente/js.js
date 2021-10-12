@@ -1,5 +1,6 @@
 import Layout from "../../layouts/main";
 import Swal from "sweetalert2";
+import $ from 'jquery'
 
 import { required, email, minLength } from "vuelidate/lib/validators";
 import Multiselect from "vue-multiselect";
@@ -24,7 +25,7 @@ export default {
       optionsNivel: [],
       submitted: false,
       typeform: "create",
-      titlemodal: "Crear Docente",
+      titlemodal: "Nuevo Docente",
       modal: false,
       emailexist: false,
       // permiso
@@ -95,17 +96,15 @@ export default {
   },
   mounted() {
     this.traerData();
-    // this.traerNivel();
     this.traerSubnivel();
-    // Set the initial number of items
     this.totalRows = this.items.length;
   },
   methods: {
+
     traerData() {
       this.axios
         .get(`${this.urlbackend}/docente/obtenerdocente`)
         .then((response) => {
-          console.log(response)
           response.data.map((p) => {
             if (p.user.estado_id == 1) {
               p.user.estado_id = "Activo";
@@ -114,7 +113,6 @@ export default {
             }
             // crear nueva propiedad y asigno el valor
             p["estado"] = p.user.estado_id;
-
             // remover la propiedad actual
             delete p.user.estado_id;
             // retornar el nuevo objeto
@@ -123,6 +121,7 @@ export default {
           this.tableData = response.data;
         });
     },
+
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;
@@ -132,10 +131,10 @@ export default {
     customLabel({ nombre, nivel, ano_generacion }) {
       return `( ${nivel.nombre} - ${ano_generacion} ) ${nombre}`;
     },
+    
     formSubmit() {
       this.submitted = true;
-      // stop here if form is invalid
-
+      
       this.$v.$touch();
 
       if (!this.$v.$invalid && !this.emailexist) {
@@ -144,17 +143,9 @@ export default {
             .post(`${this.urlbackend}/docente/creardocente`, this.form)
             .then((res) => {
               if (res.data.success) {
-                const title = "Crear docente";
-                const message = "Docente creado con exito";
+                const title = "Nuevo docente";
+                const message = "Docente creado exitosamente";
                 const type = "success";
-
-                this.form = {
-                  nombres: "",
-                  apellidos: "",
-                  email: "",
-                  subnivel_id: null,
-                  password: "",
-                };
 
                 this.modal = false;
                 this.emailexist = false;
@@ -165,15 +156,25 @@ export default {
               }
             })
             .catch((error) => {
-              console.log("error", error);
-              const title = "Crear Docente";
-              const message = "Error al crear el Docente";
-              const type = "error";
-
-              this.modal = false;
-              this.$v.form.$reset();
-
-              this.successmsg(title, message, type);
+              console.clear();
+                $.each(error.response.data.errors, function(key, value) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+                    
+                    Toast.fire({
+                        icon: 'warning',
+                        title: value[0]
+                    })
+                });
             });
         } else if (this.typeform == "edit") {
           this.axios
@@ -254,8 +255,9 @@ export default {
       this.form.nombres = datos.nombres;
       this.form.email = datos.user.email;
       (this.form.subnivel_id = datos.docentenivel),
-        (this.titlemodal = "Editar Docente");
+        (this.titlemodal = "Edición Docente");
     },
+
     eliminar(datos) {
       if (datos.estado == "Activo") {
         var estado = 2;

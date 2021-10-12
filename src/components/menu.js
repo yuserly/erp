@@ -63,6 +63,13 @@ export const menuItems = [
         parentId: 2,
         permiso: Vue.prototype.$ListarProductoProveedor,
       },
+      {
+        id: 2.5,
+        label: "Manual de Cuenta",
+        link: "/manual_cuenta_sii",
+        parentId: 2,
+        permiso: Vue.prototype.$ListarProductoProveedor,
+      },
     ],
   },
   {
@@ -81,6 +88,13 @@ export const menuItems = [
         id: 4.1,
         label: "Empresas",
         link: "/empresa",
+        parentId: 4,
+        permiso: Vue.prototype.$CrearEmpresa,
+      },
+      {
+        id: 4.2,
+        label: "Plan de Cuenta",
+        link: "/plancuenta",
         parentId: 4,
         permiso: Vue.prototype.$CrearEmpresa,
       },

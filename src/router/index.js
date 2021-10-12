@@ -54,6 +54,15 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/plancuenta",
+    name: "plancuenta",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/plancuenta/plancuenta.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/crear-empresa",
     name: "crear empresa",
     component: () =>
@@ -84,6 +93,15 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "home" */ "../views/pages/proveedor/producto.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/manual_cuenta_sii",
+    name: "manual cuenta",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/manualDeCuenta/manual.vue"
       ),
     meta: { requiresAuth: true },
   },
@@ -241,7 +259,19 @@ function hasAccess(name) {
       } else {
         return false;
       }
+    case "plancuenta":
+        if (rol == "Estudiante") {
+          return true;
+        } else {
+          return false;
+        }
     case "producto proveedor":
+      if (rol == "Administrador" || rol == "Docente") {
+        return true;
+      } else {
+        return false;
+      }
+    case "manual cuenta":
       if (rol == "Administrador" || rol == "Docente") {
         return true;
       } else {
