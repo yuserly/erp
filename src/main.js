@@ -43,6 +43,8 @@ import { permisos } from "./helpers/roles";
 
 permisos();
 Vue.prototype.$urlBackend = "http://127.0.0.1:8000";
+Vue.prototype.$globalEmpresasSelected = [];
+Vue.prototype.$globalEmpresas = [];
 
 
 const firebaseConfig = {
@@ -81,3 +83,12 @@ new Vue({
   i18n,
   render: (h) => h(App),
 }).$mount("#app");
+
+function saludar2() { 
+  if(localStorage.getItem('globalEmpresas') != null){
+    Vue.prototype.$globalEmpresas = localStorage.getItem("globalEmpresas");
+    Vue.prototype.$globalEmpresasSelected = localStorage.getItem("globalEmpresasSelected");
+  }
+}
+
+saludar2();

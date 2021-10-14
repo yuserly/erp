@@ -694,7 +694,7 @@
                                   RAZÓN SOCIAL/APELLIDO PATERNO APELLIDO MATERNO
                                   NOMBRES
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body p-2">
                                   <div class="row">
                                     <div class="col ">
                                       <b-form-group>

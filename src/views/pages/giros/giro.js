@@ -270,7 +270,6 @@ export default {
 
     editar(datos) {
       this.modal = true;
-
       this.typeform = "edit";
       this.form.id_giro  = datos.id_giro;
       this.form.nombre      = datos.nombre;

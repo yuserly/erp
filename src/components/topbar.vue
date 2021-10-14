@@ -1,9 +1,11 @@
 <script>
+import Vue from "vue";
 import simplebar from "simplebar-vue";
+import Multiselect from "vue-multiselect";
+
 export default {
-  components: {
-    simplebar,
-  },
+  components: { simplebar, Multiselect },
+
   data() {
     return {
       urlbackend: this.$urlBackend,
@@ -38,6 +40,10 @@ export default {
       text: null,
       flag: null,
       value: null,
+      options: [],
+      empresaSelect: "",
+      rolEs: "",
+      empGlobMulti: false,
     };
   },
   mounted() {
@@ -48,11 +54,29 @@ export default {
     this.value = this.languages.find((x) => x.language === this.$i18n.locale);
     this.text = this.value.title;
     this.flag = this.value.flag;
+    this.rolEs = Vue.prototype.$rol;
+    this.verificarEmpresasGlobal();
   },
   methods: {
-    /**
-     * Toggle menu
-     */
+
+    verificarEmpresasGlobal(){
+       if(Vue.prototype.$rol == "Estudiante"){
+         this.empresaSelect = JSON.parse(Vue.prototype.$globalEmpresasSelected);
+         this.options = JSON.parse(Vue.prototype.$globalEmpresas);
+         this.empGlobMulti = true;
+       }else{
+         this.empresaSelect = "";
+         this.options = [];
+         this.empGlobMulti = false;
+       }
+     },
+
+     changeSelectEmpresa(){
+        Vue.prototype.$globalEmpresasSelected = JSON.stringify(this.empresaSelect);
+        localStorage.setItem("globalEmpresasSelected", JSON.stringify(this.empresaSelect));
+        this.$router.push("/empresa");
+     },
+
     toggleMenu() {
       this.$parent.toggleMenu();
     },
@@ -112,9 +136,7 @@ export default {
               this.$router.push({
                 path: "/login",
               });
-
               location.reload(1);
-
             }
           })
           .catch((error) => {
@@ -174,7 +196,17 @@ export default {
       </div>
 
       <div class="d-flex">
-
+        <div class="d-flex flex-column pt-3 bd-highlight" v-if="empGlobMulti">
+          <multiselect
+            v-model="empresaSelect"
+            placeholder="Seleccionar"
+            track-by="id_empresa"
+            label= "razon_social"
+            :options="options"
+            @input="changeSelectEmpresa()"
+          ></multiselect>
+        </div>
+                
         <div class="dropdown d-none d-lg-inline-block ms-1">
           <button
             type="button"
@@ -185,7 +217,6 @@ export default {
             <i class="uil-minus-path"></i>
           </button>
         </div>
-
         <b-dropdown
           variant="white"
           class="dropdown d-inline-block"

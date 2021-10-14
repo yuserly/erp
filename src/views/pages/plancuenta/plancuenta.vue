@@ -6,20 +6,17 @@
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body row">
-            <div class="col-6">
+            <div class="col-7">
                 <h4 class="card-title">Plan de Cuenta</h4>
             </div>
-            <div class="col-6">
-                <label for="">Seleccione empresa</label>
-                <multiselect
-                  v-model="plancuentaSelect"
-                  placeholder="Seleccionar"
-                  track-by="id_empresa"
-                  label="razon_social"
-                  :options="options"
-                  @input="traerbusqueda()"
-                ></multiselect>
-              </div>
+            <div class="col-5 row d-flex justify-content-end">
+                <div class="col-4 d-flex justify-content-end">
+                    <button class="btn btn-success"><i class="fa fa-plus-circle"></i> Crear Cuenta</button>
+                </div>
+                <div class="col-5 d-flex justify-content-end">
+                    <button class="btn btn-warning"><i class="fa fa-list"></i> Mi Manual Cuenta</button>                    
+                </div>
+            </div>
           </div>
         </div>
       </div>

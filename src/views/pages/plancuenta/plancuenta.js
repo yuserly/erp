@@ -1,6 +1,7 @@
 import Layout from "../../layouts/main";
 import Swal from "sweetalert2";
 import Multiselect from "vue-multiselect";
+import Vue from 'vue';
 
 import {
   required,
@@ -76,7 +77,7 @@ export default {
         "action",
       ],
       info: {
-        codigo: "",
+        codigo: "", 
         nombre: "",
         descripcion: "",
         clasificacion: null,
@@ -112,6 +113,7 @@ export default {
   mounted() {
 
     this.traerDataInicial();
+    this.traerplanCuenta();
 
   },
 
@@ -156,7 +158,7 @@ export default {
 
     addPlanCuenta(datos)
     {   
-        this.formAdd.empresa = this.plancuentaSelect.id_empresa;
+        this.formAdd.empresa = JSON.parse(Vue.prototype.$globalEmpresasSelected)
         this.formAdd.manual  = datos.id_manual_cuenta;
 
         this.axios
@@ -198,10 +200,12 @@ export default {
         
     },
 
-    traerbusqueda(){
+    traerplanCuenta(){
+        var selected = JSON.parse(Vue.prototype.$globalEmpresasSelected);
         this.axios
-        .get(`${this.urlbackend}/plancuenta/getPlanCuenta/${this.plancuentaSelect.id_empresa}`, { 'headers': { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
+        .get(`${this.urlbackend}/plancuenta/getPlanCuenta/`+selected.id_empresa, { 'headers': { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
         .then((response) => {
+          console.log(response);
             response.data.map((p) => {
                 p["codigo"]     = p.manual_cuenta.codigo;
                 p["nombre"]     = p.manual_cuenta.nombre;              
@@ -209,6 +213,7 @@ export default {
               });
           this.plancuentaData = response.data;
         });
+        
     },
 
     deleteCuenta(datos) {
@@ -248,10 +253,7 @@ export default {
       this.titlemodal = "Editar Subnivel";
       this.form.id_subnivel = datos.id_subnivel;
     },
-    
-    
-    // validacion
-
+ 
     formSubmit() {
       this.submitted = true;
       // stop here if form is invalid

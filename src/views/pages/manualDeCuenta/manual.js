@@ -94,6 +94,7 @@ export default {
       ],
     };
   },
+
   validations: {
     form: {
       codigo: {
@@ -122,6 +123,7 @@ export default {
       },
     },
   },
+  
   mounted() {
     this.traerData();
     this.traerInformacion();

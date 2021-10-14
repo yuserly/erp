@@ -38,12 +38,13 @@ export default {
         this.axios
           .post(`${this.urlbackend}/auth/login`, this.form)
           .then((res) => {
-            console.log(res);
+            //console.log(res.data.data);
             if (res.data.success) {
               // console.log("Logiiin");
               const token = res.data.data.token;
               const rol = btoa(res.data.data.rol[0]);
               const nrol = btoa("rol");
+              //Vue.prototype.$globalEmpresas = res.data.data.empresa;
               // const id_estudiante_docente = res.data.data.id_estudiante;
               localStorage.setItem("token", token);
               localStorage.setItem(nrol, rol);
@@ -55,7 +56,14 @@ export default {
               localStorage.setItem(nperm, btoa(permisos));
 
               Vue.prototype.$rol = res.data.data.rol[0];
-
+              
+              if (res.data.data.rol[0] === "Estudiante") {
+                Vue.prototype.$globalEmpresas = JSON.stringify(res.data.data.empresa);
+                localStorage.setItem("globalEmpresas", JSON.stringify(res.data.data.empresa));
+                Vue.prototype.$globalEmpresasSelected = JSON.stringify(res.data.data.empresa[0]);
+                localStorage.setItem("globalEmpresasSelected", JSON.stringify(res.data.data.empresa[0]));
+              }
+              
               res.data.data.permisos.map((p) => {
                 if (p.name == "Crear Docente") {
                   Vue.prototype.$CrearDocente = true;
