@@ -975,6 +975,7 @@
                   <div class="col-12 col-md-4">
                     <div class="card h-100">
                       <div class="card-body">
+                        <form class="needs-validation" @submit.prevent="formSubmit">
                         <div class="row">
                           <div class="col-12">
                             <b-form-group
@@ -989,7 +990,11 @@
                                 v-model="form.profe_fecha_firma"
                                 value=""
                                 type="date"
+                                :class="{
+                                  'is-invalid': submitted && $v.form.profe_fecha_firma.$error,
+                                }"
                               ></b-form-input>
+                              
                             </b-form-group>
                           </div>
                           <div class="col-12">
@@ -1001,12 +1006,15 @@
                                       <div class="col-12 col-md-6">
                                         CAT.TRIBUTARIA
                                       </div>
+                                      
                                       <div class="col-12 col-md-3">
                                         <b-form-radio
                                           class="mb-3"
+                                          required
                                           v-model="form.profe_categoria"
                                           value="1"
                                           plain
+                                          
                                           >SI</b-form-radio
                                         >
                                       </div>
@@ -1019,6 +1027,9 @@
                                           >NO</b-form-radio
                                         >
                                       </div>
+                                      <span class="text-danger mt-2" v-if="$v.form.profe_categoria.$error == true"
+                                          >CAT Requerida.</span
+                                        >
                                     </div>
                                   </div>
                                 </div>
@@ -1053,6 +1064,10 @@
                                           >NO AFECTA</b-form-radio
                                         >
                                       </div>
+
+                                      <span class="text-danger mt-2" v-if="$v.form.profe_iva.$error == true"
+                                          >IVA Requerido.</span
+                                        >
                                     </div>
                                   </div>
                                 </div>
@@ -1086,6 +1101,9 @@
                                           >NO</b-form-radio
                                         >
                                       </div>
+                                      <span class="text-danger mt-2" v-if="$v.form.profe_anexo.$error == true"
+                                          >IVA Requerido.</span
+                                        >
                                     </div>
                                   </div>
                                 </div>
@@ -1103,14 +1121,14 @@
                             </button>
 
                             <button
-                              type="button"
-                              v-on:click="formSubmit()"
+                              type="submit"
                               class="btn btn-success waves-effect waves-light float-end"
                             >
                               <i class="uil uil-check me-2"></i> Aprobar
                             </button>
                           </div>
                         </div>
+                        </form>
                       </div>
                     </div>
                   </div>
