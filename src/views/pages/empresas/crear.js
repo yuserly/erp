@@ -15,6 +15,7 @@ export default {
     data() {
       return {
         urlbackend: this.$urlBackend,
+        typeform: 'create',
         form: {
           token: '',
           rut_empresa: '',
@@ -25,7 +26,8 @@ export default {
           email: '',
           capital_inicial: 0,
           tipo_empresa:'',
-          docente:''
+          docente:'',
+          direccion: ''
         },
         options: [],
         optionsDocente : [],
@@ -78,49 +80,43 @@ export default {
         });
 
       },
-      // eslint-disable-next-line no-unused-vars
+
+
       formSubmit() {
         this.submitted = true;
-        // stop here if form is invalid
-        this.$v.$touch();
-        if (!this.$v.$invalid) {
+        alert("1");
+        if (this.typeform == "create") {
+          alert("2");
+          this.axios.post(`${this.urlbackend}/empresa/crearempresa`, this.form)
+            .then((res) => {
+              console.log(res)
+              if (res.data.success) {
+                Swal.fire({
+                    title: "Crear Empresa",
+                    text: "Empresa creada con éxito!",
+                    icon: "success",
+                    showCancelButton: false,
+                    confirmButtonColor: "#34c38f",
+                    confirmButtonText: "Ok",
+                  }).then((result) => {
+                    if (result.value) {
+                        this.$router.push('/empresa')
+                    }
+                  });
+              }
+            })
+            .catch((error) => {
+              console.log("error", error);
+              const title = "Crear empresa";
+              const message = "Error al crear la empresa";
+              const type = "error";
+              this.$v.form.$reset();
 
-            console.log(this.form);
-
-            this.axios
-              .post(`${this.urlbackend}/empresa/crearempresa`, this.form)
-              .then((res) => {
-                console.log(res)
-                if (res.data.success) {
-
-                    Swal.fire({
-                        title: "Crear Empresa",
-                        text: "Empresa creada con éxito!",
-                        icon: "success",
-                        showCancelButton: false,
-                        confirmButtonColor: "#34c38f",
-                        confirmButtonText: "Ok",
-                      }).then((result) => {
-                        if (result.value) {
-                            this.$router.push('/empresa')
-                        }
-                      });
-                 
-                    
-  
-                }
-              })
-              .catch((error) => {
-                console.log("error", error);
-                const title = "Crear empresa";
-                const message = "Error al crear la empresa";
-                const type = "error";
-                this.$v.form.$reset();
-  
-                this.successmsg(title, message, type);
-              });
+              this.successmsg(title, message, type);
+            });
         }
-      },
+        
+    },
 
     
     

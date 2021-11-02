@@ -22,7 +22,6 @@
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
-
             <div class="row mt-4">
               <div class="col-sm-12 col-md-6">
                 <div id="tickets-table_length" class="dataTables_length">
@@ -130,8 +129,8 @@
       :title="titlemodal"
       title-class="font-18"
       hide-footer
-      v-if="modal"
-    >
+      v-if="modal">
+      
       <form class="needs-validation" @submit.prevent="formSubmit">
         <div class="row">
             <div class="col-md-4">

@@ -170,14 +170,14 @@
           </div>
         </div>
 
-         <b-modal
+                  <b-modal
                     id="crearnivel"
                     centered
                     :title="titlemodal"
                     title-class="font-15"
                     hide-footer
-                    v-if="modal"
-                  >
+                    v-if="modal">
+
                     <form class="needs-validation" @submit.prevent="formSubmit">
                     
                         <div class="row">

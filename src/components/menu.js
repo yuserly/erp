@@ -9,8 +9,8 @@ export const menuItems = [
   },
   {
     id: 1,
-    label: "Gestión Usuarios",
-    icon: "fas fa-users",
+    label: "Sistema",
+    icon: "fas fa-tools",
     permiso: Vue.prototype.$ListarProductoProveedor,
     subItems: [
       {
@@ -27,48 +27,55 @@ export const menuItems = [
         parentId: 1,
         permiso: Vue.prototype.$ListarEstudiante,
       },
+      {
+        id: 1.3,
+        label: "Niveles",
+        link: "/niveles",
+        parentId: 1,
+        permiso: Vue.prototype.$ListarSubNivel,
+      },
     ],
   },
   {
     id: 2,
-    label: "Gestión Sistema",
-    icon: "fas fa-network-wired",
+    label: "General",
+    icon: "fab fa-whmcs",
     permiso: Vue.prototype.$ListarProductoProveedor,
     subItems: [
       {
         id: 2.1,
-        label: "Niveles",
-        link: "/niveles",
-        parentId: 2,
-        permiso: Vue.prototype.$ListarSubNivel,
-      },
-      {
-        id: 2.2,
-        label: "Act. Economicas",
-        link: "/actividad_economica",
-        parentId: 2,
-        permiso: Vue.prototype.$SolicitudEmpresa,
-      },
-      {
-        id: 2.3,
         label: "Gestión Proveedores",
         link: "/gestion_proveedor",
         parentId: 2,
         permiso: Vue.prototype.$ListarProveedor,
       },
       {
-        id: 2.4,
+        id: 2.2,
         label: "Productos Proveedor",
         link: "/producto_proveedor",
         parentId: 2,
         permiso: Vue.prototype.$ListarProductoProveedor,
       },
       {
-        id: 2.5,
+        id: 2.3,
         label: "Manual de Cuenta",
         link: "/manual_cuenta_sii",
         parentId: 2,
         permiso: Vue.prototype.$ListarProductoProveedor,
+      },
+      {
+        id: 2.4,
+        label: "Act. Economicas",
+        link: "/actividad_economica",
+        parentId: 2,
+        permiso: Vue.prototype.$SolicitudEmpresa,
+      },
+      {
+        id: 2.5,
+        label: "Documentos Tributarios",
+        link: "/documentos_tributario",
+        parentId: 2,
+        permiso: Vue.prototype.$SolicitudEmpresa,
       },
     ],
   },
@@ -82,7 +89,7 @@ export const menuItems = [
   {
     id: 4,
     label: "Gestión Empresas",
-    icon: "fas fa-building",
+    icon: "fas fa-store-alt",
     permiso: Vue.prototype.$CrearEmpresa,
     subItems: [
       {
@@ -94,7 +101,7 @@ export const menuItems = [
       },
       {
         id: 4.2,
-        label: "Plan de Cuenta",
+        label: "Centro Contable",
         link: "/plancuenta",
         parentId: 4,
         permiso: Vue.prototype.$CrearEmpresa,
@@ -104,24 +111,82 @@ export const menuItems = [
 
   {
     id: 5,
-    label: "Gestión Empresas",
-    icon: "fas fa-network-wired",
+    label: "Solicitudes",
+    icon: "fas fa-store-alt",
     permiso: Vue.prototype.$ListarProductoProveedor,
     subItems: [
       {
         id: 5.1,
-        label: "Solicitud Empresa",
+        label: "Escrituras",
         link: "/solicitud-empresa",
         parentId: 5,
         permiso: Vue.prototype.$SolicitudEmpresa,
       },
       {
         id: 5.2,
-        label: "Solicitud Inicio Act.",
+        label: "Inicio Actividades",
         link: "/solicitud-actividades",
         parentId: 5,
         permiso: Vue.prototype.$SolicitudInicioActividad,
       }
+    ],
+  },
+  {
+    id: 7,
+    label: "Abastecimiento",
+    icon: "uil-truck-loading",
+    permiso: Vue.prototype.$CrearEmpresa,
+    subItems: [
+      {
+        id: 7.1,
+        label: "Ingresar documento",
+        link: "/abastecimiento_emitir",
+        parentId: 7,
+        permiso: Vue.prototype.$CrearEmpresa,
+      },
+      {
+        id: 7.2,
+        label: "Modificar documento",
+        link: "/asiento-inicial",
+        parentId: 7,
+        permiso: Vue.prototype.$CrearEmpresa,
+      },
+      {
+        id: 7.3,
+        label: "Aprobar documento",
+        link: "/asiento-inicial",
+        parentId: 7,
+        permiso: Vue.prototype.$CrearEmpresa,
+      },
+      {
+        id: 7.4,
+        label: "Emitir documento",
+        link: "/asiento-inicial",
+        parentId: 7,
+        permiso: Vue.prototype.$CrearEmpresa,
+      },
+      {
+        id: 7.5,
+        label: "Ver documento",
+        link: "/asiento-inicial",
+        parentId: 7,
+        permiso: Vue.prototype.$CrearEmpresa,
+      },
+    ],
+  },
+  {
+    id: 6,
+    label: "Finanzas",
+    icon: "fas fa-network-wired",
+    permiso: Vue.prototype.$CrearEmpresa,
+    subItems: [
+      {
+        id: 6.1,
+        label: "Comprobantes",
+        link: "/asiento-inicial",
+        parentId: 6,
+        permiso: Vue.prototype.$CrearEmpresa,
+      },
     ],
   },
  

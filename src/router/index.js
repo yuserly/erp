@@ -106,6 +106,24 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/asiento-inicial",
+    name: "asiento inicial",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/asientoinicial/asiento.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/comprobanteDetalle/:id",
+    name: "comprobante detalle",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/asientoinicial/detalleComprobante.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/login",
     name: "login",
     component: () =>
@@ -118,6 +136,15 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "home" */ "../views/pages/empresas/editar-empresa.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/unidadNegocio/:id",
+    name: "nueva unidad negocio",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/empresas/unidad-negocio.vue"
       ),
     meta: { requiresAuth: true },
   },
@@ -166,14 +193,47 @@ const routes = [
       ),
     meta: { requiresAuth: true },
   },
+  {
+    path: "/documentos_tributario",
+    name: "documentos tributarios",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/documentosT/documentos.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/abastecimiento_emitir",
+    name: "abastecimiento emitir",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/abastecimiento/emitir.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/abastecimiento_emitir/:tipo",
+    name: "abastecimiento emitir show",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/abastecimiento/emitirShow.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/formulario-tributario",
+    name: "formulario tributario",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/abastecimiento/formulario.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = new VueRouter({
   routes,
-  // Use the HTML5 history API (i.e. normal-looking routes)
-  // instead of routes with hashes (e.g. example.com/#/about).
-  // This may require some server configuration in production:
-  // https://router.vuejs.org/en/essentials/history-mode.html#example-server-configurations
+ 
   mode: "history",
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
@@ -275,9 +335,39 @@ function hasAccess(name) {
       if (rol == "Estudiante") {
         return true;
       } else {
-        return false;
+        return false; 
       }
     case "plancuenta":
+      if (rol == "Estudiante") {
+        return true;
+      } else {
+        return false;
+      }
+      case "abastecimiento emitir show":
+      if (rol == "Estudiante") {
+        return true;
+      } else {
+        return false;
+      }
+    case "asiento inicial":
+      if (rol == "Estudiante") {
+        return true;
+      } else {
+        return false;
+      }
+      case "comprobante detalle":
+        if (rol == "Estudiante") {
+          return true;
+        } else {
+          return false;
+        }
+      case "abastecimiento emitir":
+        if (rol == "Estudiante") {
+          return true;
+        } else {
+          return false;
+        }
+        case "formulario tributario":
         if (rol == "Estudiante") {
           return true;
         } else {
@@ -337,6 +427,13 @@ function hasAccess(name) {
         return false;
       }
 
+    case "nueva unidad negocio":
+        if (rol == "Estudiante") {
+          return true;
+        } else {
+          return false;
+        }
+
     case "solicitud empresa":
       if (rol == "Administrador" || rol == "Docente") {
         return true;
@@ -358,6 +455,12 @@ function hasAccess(name) {
         return false;
       }
 
+    case "documentos tributarios":
+      if (rol == "Administrador" || rol == "Docente") {
+        return true;
+      } else {
+        return false;
+      }
     case "solicitud actividades":
       if (rol == "Administrador" || rol == "Docente") {
         return true;

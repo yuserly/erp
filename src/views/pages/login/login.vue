@@ -32,7 +32,6 @@ export default {
     formSubmit() {
       console.log(this.form);
       this.submitted = true;
-      // stop here if form is invalid
       this.$v.$touch();
       if (!this.$v.$invalid) {
         this.axios

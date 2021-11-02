@@ -83,9 +83,23 @@
                       "
                     >
                       <router-link
-                        :to="'editar-empresa/' + data.item.id_empresa"
+                        :to="'unidadNegocio/' + data.item.id_empresa"
                       >
-                        <a class="px-2 text-primary" title="Editar">
+                        <a class="px-2 text-primary" title="Unidad Negocio">
+                          <i class="uil uil-sitemap font-size-18"></i>
+                        </a>
+                      </router-link>
+                    </li>
+                    <li
+                      class="list-inline-item"
+                      v-if="
+                        data.item.estado_id == 5 || data.item.estado_id == 3
+                      "
+                    >
+                      <router-link
+                        :to="'unidadNegocio/' + data.item.id_empresa"
+                      >
+                        <a class="px-2 text-warning" title="Editar">
                           <i class="uil uil-pen font-size-18"></i>
                         </a>
                       </router-link>
@@ -95,7 +109,7 @@
                       v-if="data.item.estado_id == 3"
                     >
                       <router-link :to="'f4415/' + data.item.id_empresa">
-                        <a class="px-2 text-primary" title="Formulario 4415">
+                        <a class="px-2 text-success" title="Formulario 4415">
                           <i class="uil uil-clipboard font-size-18"></i>
                         </a>
                       </router-link>

@@ -2,19 +2,46 @@ import Layout from "../../layouts/main";
 import Swal from "sweetalert2";
 import Multiselect from "vue-multiselect";
 import Vue from 'vue';
+import $ from 'jquery'
 
-import {
-  required,
-  maxLength,
-  minLength,
-  numeric,
-} from "vuelidate/lib/validators";
+import { required, numeric} from "vuelidate/lib/validators";
 
 export default {
   components: { Layout, Swal, Multiselect },
   data() {
     return {
       urlbackend: this.$urlBackend,
+      tableDataMiManual: [],
+
+      titleMa: "SubNiveles",
+      itemsMa: [
+        {
+          text: "Tables",
+        },
+        {
+          text: "SubNiveles",
+          active: true,
+        },
+      ],
+      totalRowsMa: 1,
+      currentPageMa: 1,
+      perPageMa: 10,
+      pageOptionsMa: [10, 25, 50, 100],
+      filterMa: null,
+      filterOnMa: [],
+      sortByMa: "Nivel",
+      sortDescMa: false,
+      fieldsMa: [
+        {
+          key: "codigo",
+          sortable: true,
+        },
+        {
+          key: "nombre",
+          sortable: true,
+        },
+        "action",
+      ],
       tableData: [],
 
       title: "SubNiveles",
@@ -76,6 +103,20 @@ export default {
         },
         "action",
       ],
+      form: {
+        codigo1: "", 
+        codigo2: "", 
+        codigo3: "", 
+        codigo4: "", 
+        nombre: "",
+        descripcion: "",
+        clasificacion: null,
+        subclasificacion: null,
+        cargos: "",
+        abonos: "",
+        saldoDeudor: "",
+        saldoAcreedor: "",
+      },
       info: {
         codigo: "", 
         nombre: "",
@@ -91,44 +132,78 @@ export default {
         manual: "",
         empresa: "",
       },
+      formAddMiManual: {
+        manual: "",
+        empresa: "",
+      },
       submitted: false,
       submitform: false,
       submit: false,
       typesubmit: false,
       modalInfo: false,
+      modalListaMiCuenta: false,
       titlemodal: "Información",
+      titlemodalLista: "Listado Mi Manual Cuenta",
+      typeform: "create",
       options: [],
       plancuentaSelect: "",
       plancuentaData: [],
+      modal: false,
+      clasificacion: [],
+      subclasificacion: [],
 
-       // permiso
-
-       crearsubnivel: this.$CrearSubNivel,
-       listarsubnivel: this.$ListarSubNivel,
-       editarsubnivel: this.$EditarSubnivel,
-       eliminarsubnivel: this.$EliminarSubnivel,
     };
   },
-
+  validations: {
+    form: {
+      codigo1:{
+        required,
+        numeric
+      },
+      codigo2:{
+        required,
+        numeric
+      },
+      codigo3:{
+        required,
+        numeric
+      },
+      codigo4:{
+        required,
+        numeric
+      },
+      nombre: {
+        required,
+      },
+      descripcion:{
+        required,
+      },
+      clasificacion: {
+        required,
+      },
+      subclasificacion: {
+        required,
+      },
+      abonos: {
+        required,
+      },
+      cargos: {
+        required,
+      },
+      salgoDeudor: {
+        required,
+      },
+      saldoAcreedor: {
+        required,
+      },
+    },
+  },
+  
   mounted() {
 
     this.traerDataInicial();
     this.traerplanCuenta();
 
-  },
-
-  validations: {
-    form: {
-      nombre: {
-        required,
-      },
-      ano_generacion: {
-        required,
-        numeric,
-        minLength: minLength(4),
-        maxLength: maxLength(4),
-      },
-    },
   },
 
   methods: {
@@ -138,8 +213,24 @@ export default {
           .get(`${this.urlbackend}/plancuenta/obterDatos`, { 'headers': { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
           .then((response) => {
             this.tableData = response.data.datos;
+            this.tableDataMiManual = response.data.datosMiManual;
             this.options = response.data.empresas;
+            this.clasificacion = response.data.clasificacion;
           });
+    },
+
+    getSubClasificacion() {
+      if(this.form.clasificacion == null){
+        this.subclasificacion = [];
+        return false;
+      }
+      this.axios
+        .get(`${this.urlbackend}/mimanualcuenta/getSubClasificacion/`+this.form.clasificacion.id_clasificacion, { 'headers': { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
+        .then((response) => {
+            
+            this.subclasificacion = response.data;
+     
+        });
     },
   
     verInformacion(datos){
@@ -176,7 +267,52 @@ export default {
 
                 this.successmsg(title, message, type);
 
-                this.plancuentaData.push(datos);
+                this.traerplanCuenta();
+              }
+            })
+            .catch((error) => {
+                console.clear();
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+                Toast.fire({
+                    icon: 'warning',
+                    title: error.response.data.errors,
+                })
+            });
+        
+    },
+    
+    addMiPlanCuenta(datos)
+    {   
+        this.formAdd.empresa = JSON.parse(Vue.prototype.$globalEmpresasSelected)
+        this.formAdd.manual  = datos.id_manual_cuenta;
+
+        this.axios
+            .post(`${this.urlbackend}/miplancuenta/addMiPlanCuenta`, this.formAdd, { 'headers': { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
+            .then((res) => {
+              
+              if (res.data.success) {
+                const title = "Plan de Cuenta Contable";
+                const message = "cuenta añadida exitosamente";
+                const type = "success";
+
+                this.formAdd = {
+                  empresa: "",
+                  manual: "",
+                };
+
+                this.successmsg(title, message, type);
+
+                this.traerplanCuenta();
               }
             })
             .catch((error) => {
@@ -200,15 +336,49 @@ export default {
         
     },
 
+    editarMiCuenta(datos)
+    {   
+      this.axios
+        .get(`${this.urlbackend}/mimanualcuenta/getSubClasificacion/`+datos.clasificacion.id_clasificacion, { 'headers': { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
+        .then((response) => {
+            this.subclasificacion = response.data;
+      });
+
+      this.modal = true;
+      this.titlemodal = "Editar Cuenta";
+      this.typeform =  "edit";
+      this.form = {
+        idManual: datos.id_manual_cuenta,
+        codigo1: datos.codigo1,
+        codigo2: datos.codigo2,
+        codigo3: datos.codigo3,
+        codigo4: datos.codigo4,
+        nombre:  datos.nombre,
+        descripcion: datos.descripcion,
+        clasificacion: datos.clasificacion,
+        subclasificacion: datos.sub_clasificacion,
+        cargos: datos.cargos,
+        abonos: datos.abonos,
+        saldoDeudor: datos.saldo_deudor,
+        saldoAcreedor: datos.saldo_acreedor,
+      };
+      this.btnCreate        = true;
+    },
+
     traerplanCuenta(){
         var selected = JSON.parse(Vue.prototype.$globalEmpresasSelected);
         this.axios
         .get(`${this.urlbackend}/plancuenta/getPlanCuenta/`+selected.id_empresa, { 'headers': { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
         .then((response) => {
-          console.log(response);
             response.data.map((p) => {
-                p["codigo"]     = p.manual_cuenta.codigo;
-                p["nombre"]     = p.manual_cuenta.nombre;              
+                if(p.manual_cuenta != null){
+                  p["codigo"]     = '(S) '+p.manual_cuenta.codigo;
+                  p["nombre"]     = p.manual_cuenta.nombre;  
+                }else if(p.mi_manual_cuenta != null){
+                  p["codigo"]     = '(M) '+p.mi_manual_cuenta.codigo;
+                  p["nombre"]     = p.mi_manual_cuenta.nombre;  
+                }
+                            
                 return p;
               });
           this.plancuentaData = response.data;
@@ -230,7 +400,180 @@ export default {
        
     },
 
-    //   creado por defecto para la tabla
+    modalNuevo()
+    {
+      this.modal = true;
+      this.typeform =  "create";
+      this.titlemodal = "Nueva Cuenta";
+      this.form = {
+        codigo1: "",
+        codigo2: "",
+        codigo3: "",
+        codigo4: "",
+        nombre: "",
+        descripcion: "",
+        clasificacion: "",
+        subclasificacion: "",
+        cargos: "",
+        abonos: "",
+        saldoDeudor: "",
+        saldoAcreedor: "",
+      };
+      this.btnCreate        = true;
+
+    },
+
+    modalMiCuenta()
+    {
+        this.modalListaMiCuenta = true;
+
+        this.axios
+            .get(`${this.urlbackend}/mimanualcuenta/getDatos`, this.form)
+            .then((res) => {
+              this.tableDataMiManual = res.data;
+            })
+            .catch(error => {
+                console.clear();
+                $.each(error.response.data.errors, function(key, value) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+                    
+                    Toast.fire({
+                        icon: 'warning',
+                        title: value[0]
+                    })
+                });
+            });
+    },
+
+    formSubmit() {
+      this.submitted = true;
+      
+      this.$v.$touch();
+
+        if (this.typeform == "create") {
+          this.axios
+            .post(`${this.urlbackend}/mimanualcuenta/store`, this.form)
+            .then((res) => {
+              if (res.data.success) {
+                const title = "Nueva Cuenta";
+                const message = "Cuenta Creada Exitosamente";
+                const type = "success";
+
+                this.form = {
+                    codigo1: "", 
+                    codigo2: "", 
+                    codigo3: "", 
+                    codigo4: "", 
+                    nombre: "",
+                    descripcion: "",
+                    clasificacion: null,
+                    subclasificacion: null,
+                    cargos: "",
+                    abonos: "",
+                    saldoDeudor: "",
+                    saldoAcreedor: "",
+                };
+
+                this.modal = false;
+
+                this.$v.form.$reset();
+                this.successmsg(title, message, type);
+              }
+            })
+            .catch(error => {
+              console.clear();
+              const Toast = Swal.mixin({
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 4000,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                  }
+              })
+              Toast.fire({
+                  icon: 'warning',
+                  title: error.response.data.errors,
+              })
+            });
+        } else if (this.typeform == "edit") {
+          
+          this.axios
+            .put(
+              `${this.urlbackend}/mimanualcuenta/update2/${this.form.idManual}`,
+              this.form
+            )
+            .then((res) => {
+          
+              if (res.data.success) {
+                  
+                const title     = "Edición Cuenta";
+                const message   = "Actualizado Exitosamente";
+                const type      = "success";
+
+                this.form = {
+                  codigo1: "", 
+                  codigo2: "", 
+                  codigo3: "", 
+                  codigo4: "", 
+                  nombre: "",
+                  descripcion: "",
+                  clasificacion: null,
+                  subclasificacion: null,
+                  cargos: "",
+                  abonos: "",
+                  saldoDeudor: "",
+                  saldoAcreedor: "",
+              };
+  
+                this.modal = false;
+                this.titlemodal = "Nueva Cuenta",
+              
+                this.successmsg(title, message, type);
+                this.axios
+                  .get(`${this.urlbackend}/mimanualcuenta/getDatos`, this.form)
+                  .then((res) => {
+                    this.tableDataMiManual = res.data;
+                  })
+                  .catch(error => {
+                      console.log(error);
+                  });
+                
+              }
+            })
+            .catch((error) => {
+              console.clear();
+              const Toast = Swal.mixin({
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 4000,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                  }
+              })
+              Toast.fire({
+                  icon: 'warning',
+                  title: error.response.data.errors,
+              })
+            });
+        }
+    },
+
     onFilteredN(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRowsN = filteredItems.length;
@@ -254,92 +597,9 @@ export default {
       this.form.id_subnivel = datos.id_subnivel;
     },
  
-    formSubmit() {
-      this.submitted = true;
-      // stop here if form is invalid
-      this.$v.$touch();
-
-      if (!this.$v.$invalid) {
-        if (this.form.typeform == "create") {
-          this.axios
-            .post(`${this.urlbackend}/nivel/crearsubnivel`, this.form)
-            .then((res) => {
-              if (res.data.success) {
-                const title = "Crear subnivel";
-                const message = "Subnivel creado con exito";
-                const type = "success";
-
-                this.form = {
-                  nombrenivel: "",
-                  nombre: "",
-                  ano_generacion: "",
-                  nivel_id: "",
-                  typeform: "",
-                };
-
-                this.modal = false;
-                this.$v.form.$reset();
-
-                this.successmsg(title, message, type);
-
-                this.traerDataInicial();
-              }
-            })
-            .catch((error) => {
-              console.log("error", error);
-              const title = "Crear subnivel";
-              const message = "Error al crear el subnivel";
-              const type = "error";
-
-              this.modal = false;
-              this.$v.form.$reset();
-
-              this.successmsg(title, message, type);
-            });
-        } else {
-          this.axios
-            .put(
-              `${this.urlbackend}/nivel/updatesubnivel/${this.form.id_subnivel}`,
-              this.form
-            )
-            .then((res) => {
-              if (res.data.success) {
-                const title = "Editar subnivel"; 
-                const message = "Subnivel editado con exito";
-                const type = "success";
-
-                this.form = {
-                  nombrenivel: "",
-                  nombre: "",
-                  ano_generacion: "",
-                  nivel_id: "",
-                  typeform: "",
-                };
-
-                this.modal = false;
-                this.$v.form.$reset();
-
-                this.successmsg(title, message, type);
-
-                this.traerDataInicial();
-              }
-            })
-            .catch((error) => {
-              console.log("error", error);
-              const title = "Editar subnivel";
-              const message = "Error al editar el subnivel";
-              const type = "error";
-              this.modal = false;
-              this.$v.form.$reset();
-
-              this.successmsg(title, message, type);
-            });
-        }
-      }
-    },
-
     successmsg(title, message, type) {
       Swal.fire(title, message, type);
     },
+
   },
 };

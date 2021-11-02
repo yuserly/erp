@@ -170,6 +170,7 @@ export default {
           this.tableData = response.data;
         });
     },
+    
     editar(datos) {
       this.form.typeform = "edit";
       this.form.nombre = datos.nombre;

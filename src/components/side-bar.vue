@@ -312,8 +312,6 @@ export default {
           </template>
         </ul>
       </div>
-      <!-- Sidebar -->
     </simplebar>
   </div>
-  <!-- Left Sidebar End -->
 </template>

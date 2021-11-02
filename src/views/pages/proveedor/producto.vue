@@ -9,7 +9,7 @@
             <h4 class="card-title">Gestión Producto</h4>
             <hr>
             <div class="row">
-            <div class="col-md-4"> 
+            <div class="col-md-6"> 
                     <div class="mb-3">
                         <label>Seleccionar Proveedor</label>
                         <multiselect

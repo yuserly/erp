@@ -1,10 +1,12 @@
 import Layout from "../../layouts/main";
 import Swal from "sweetalert2";
 import $ from 'jquery'
+import Vue from 'vue';
 
 
 import { required, numeric} from "vuelidate/lib/validators";
 import Multiselect from "vue-multiselect";
+
 export default {
   components: {
     Layout,
@@ -15,19 +17,36 @@ export default {
     return {
       urlbackend: this.$urlBackend,
       form: {
-        codigo: "",
-        nombre: "",
-        categoria: null,
-        iva: null,
+        idComprobante: this.$route.params.id,  
+        cuenta: "",
+        centro: "",
+        unidad : "",
+        glosa: "",
+        cliente: "",
+        proveedor: "",
+        deber: "",
+        haber: "",
       },
-      options: [],
-      categorias: [],
-      optiones: 'Mensaje', 
+      info:{
+        glosa: "",
+        fecha_comprobante: "",
+        tipocomprobante: "",
+      },
+      id: this.$route.params.id,
+      idEmpresa: JSON.parse(Vue.prototype.$globalEmpresasSelected),
+      cuentas: [],
+      centros: [], 
+      
       submitted: false,
-      typeform: "create",
-      titlemodal: "Nueva Actividad Económica",
-      modal: false,
-      btnCreate: true,
+      typeform: "create", 
+      divButton: true, //Para actualizar y crear
+
+      // permiso
+
+      crearproveedor: this.$CrearProveedor,
+      listarproveedor: this.$ListarProveedor,
+      editarproveedor: this.$EditarProveedor,
+      eliminarproveedor: this.$EliminarProveedor,
 
       // tabla
 
@@ -53,24 +72,35 @@ export default {
       sortDesc: false,
       fields: [
         {
-          label: "Código",
-          key: "codigo",
+          label: "Cuenta Contable",
+          key: "cuenta",
           sortable: true,
         },
         {
-          labe: "Descripcion",
-          key: "nombre",
+          label: "Centro Costos",
+          key: "centro",
+          sortable: true,
+        },
+
+        {
+          label: "Cliente",
+          key: "cliente",
           sortable: true,
         },
         {
-          label: "Categoria",
-          key: "categoria",
-          sortable: true,
+            label: "Proveedor",
+            key: "proveedor",
+            sortable: true,
         },
-        {  
-          label: "Afecto IVA",
-          key: "iva",
-          sortable: true,
+        {
+            label: "Debe",
+            key: "debe",
+            sortable: true,
+        },
+        {
+            label: "Haber",
+            key: "haber",
+            sortable: true,
         },
         "action",
       ],
@@ -78,98 +108,115 @@ export default {
   },
   validations: {
     form: {
-      codigo: {
+      glosa: {
         required,
+      },
+      cuenta: {
+        required,
+      },
+      centro: {
+        required,
+      },
+      deber: {
         numeric,
       },
-      nombre: {
-        required,
+      haber: {
+        numeric,
       },
-      categoria: {
+      idComprobante: {
         required,
-      },
-      iva: {
-        required,
-      },
+      }
+
     },
   },
+
   mounted() {
     this.traerData();
-    this.traerAfectoIva();
-    this.traerCategorias();
+    this.traerDetalleComprobantes();
 
-    // Set the initial number of items
     this.totalRows = this.items.length;
+    
   },
   methods: {
 
     traerData() {
       this.axios
-        .get(`${this.urlbackend}/giro/obtenerGiros`)
+        .get(`${this.urlbackend}/detallecomprobante/getInicial/`+this.id+'/'+this.idEmpresa.id_empresa)
         .then((response) => {
-          response.data.map((p) => {
+            console.log(response);
             
-            p["categoria"] = p.estado_categoria.nombre+" CAT";
-            p["iva"] = p.estado_iva.nombre;
-            // retornar el nuevo objeto
-            return p;
-          });
-          this.tableData = response.data;
-          this.totalRows = response.data.length;
+            this.info.tipocomprobante = response.data.info.tipo_comprobante.nombre;
+            this.info.glosa = response.data.info.glosa;
+            this.info.fecha_comprobante = response.data.info.fecha_comprobante;
+            this.info.unidadnegocio = '('+response.data.info.unidad_negocio.codigo+') '+response.data.info.unidad_negocio.nombre;
+
+            this.cuentas = response.data.cuentas;
+            this.centros = response.data.centros;
+            this.form.unidad = '('+response.data.info.unidad_negocio.codigo+') '+response.data.info.unidad_negocio.nombre;
         });
     },
-    modalNuevo()
-    {
-      this.modal = true;
-      this.titlemodal = "Nueva Actividad Económica";
-      this.form = {
-        codigo: "",
-        nombre: "",
-        categoria: "",
-        iva: "",
-      };
-      this.btnCreate        = true;
 
+    traerDetalleComprobantes() {
+        this.axios
+          .get(`${this.urlbackend}/detallecomprobante/getdetalle/`+this.id)
+          .then((response) => {
+              console.log(response);
+              response.data.map((p) => {
+                if(p.plan_cuenta['manual_cuenta'] != null){
+                    p["cuenta"] = p.plan_cuenta['manual_cuenta']['nombre'];  
+                }else{
+                    p["cuenta"] = p.plan_cuenta['mi_manual_cuenta']['nombre'];  
+                }
+                p["centro"] = p.centro_costo.nombre;
+                return p;
+              });
+              this.tableData = response.data;
+          });
     },
+
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    customLabelIva({nombre}) {
-      return `${nombre}`;
+
+    customLabel({id_plan_cuenta}) {
+      return id_plan_cuenta;
     },
-    customLabelCat({nombre}) {
-        return `${nombre}`+ " Categoria";
-      },
+
+    customLabelCosto({ nombre}) {
+        return nombre;
+    },
 
     formSubmit() {
+      
       this.submitted = true;
 
       this.$v.$touch();
-
+ 
       if (!this.$v.$invalid) {
         if (this.typeform == "create") {
           this.axios
-            .post(`${this.urlbackend}/giro/creargiro`, this.form)
+            .post(`${this.urlbackend}/detallecomprobante/store`, this.form)
             .then((res) => {
-                console.log(res);
               if (res.data.success) {
-                const title = "Nueva Actividad Económica";
-                const message = res.data.success;
+                const title = "Nuevo  Detalle";
+                const message = "Detalle a sido agregado al comprobante actual.";
                 const type = "success";
 
                 this.form = {
-                  codigo: "",
-                  nombre: "",
-                  categoria: "",
-                  iva: "",
+                    centro: "",
+                    cuenta: "",
+                    unidadnegocio : "",
+                    glosa: "",
+                    deber: "",
+                    haber: "",
+                    cliente: "",
+                    proveedor: "",
                 };
 
-                this.modal = false;
-
                 this.$v.form.$reset();
-                this.traerData();
+                this.traerDetalleComprobantes();
                 this.successmsg(title, message, type);
               }
             })
@@ -197,30 +244,32 @@ export default {
         } else if (this.typeform == "edit") {
           this.axios
             .put(
-              `${this.urlbackend}/giro/updategiro/${this.form.id_giro}`,
+              `${this.urlbackend}/proveedor/updateProveedor/${this.form.id_proveedor}`,
               this.form
             )
             .then((res) => {
               if (res.data.success) {
-                const title = "Actividad Económica";
+                const title = "Proveedor";
                 const message = "Actualizado Exitosamente";
                 const type = "success";
 
                 this.form = {
-                  id_giro: "",
-                  codigo: "",
+                  id_proveedor: "",
+                  rut: "",
                   nombre: "",
-                  categoria: "",
-                  iva: "",
+                  celular: "",
+                  correo: "",
+                  direccion: "",
+                  giro: "",
                 };
 
-                this.modal = false;
-                this.titlemodal = "Nueva Actividad Económica",
                 this.traerData();
                 this.$v.form.$reset();
-                this.btnCreate        = true,
+                this.divButton = true,
 
                 this.successmsg(title, message, type);
+                $('.inputRUT').attr('style', 'border: 1px solid #ced4da !important');
+                $('.btnSubmit').prop('disabled',  true);
               }
             })
             .catch((error) => {
@@ -247,37 +296,36 @@ export default {
         }
       }
     },
-
-    traerAfectoIva() {
-      this.axios
-        .get(`${this.urlbackend}/giro/obtenerIva`)
-        .then((response) => {
-            this.options = response.data;
-        });
-    },
-
-    traerCategorias() {
-        this.axios
-          .get(`${this.urlbackend}/giro/obtenerCategorias`)
-          .then((response) => {
-              this.categorias = response.data;
-          });
-    },
-
+ 
     successmsg(title, message, type) {
       Swal.fire(title, message, type);
     },
 
     editar(datos) {
-      this.modal = true;
       this.typeform = "edit";
-      this.form.id_giro  = datos.id_giro;
-      this.form.nombre      = datos.nombre;
-      this.form.codigo      = datos.codigo;
-      this.form.categoria   = datos.estado_categoria;
-      this.form.iva         = datos.estado_iva;
-      this.btnCreate        = false,
-    (this.titlemodal    = "Editar Actividad Económica");
+      this.form.id_proveedor  = datos.id_proveedor;
+      this.form.rut           = datos.rut;
+      this.form.nombre        = datos.razon_social;
+      this.form.celular       = datos.celular;
+      this.form.correo        = datos.email;
+      this.form.direccion     = datos.direccion;
+      this.form.giro          = datos.giro;
+      this.divButton = false;
+    },
+
+    cancelar()
+    {
+      this.form = {
+        id_proveedor: "",
+        rut: "",
+        nombre: "",
+        celular: "",
+        correo: "",
+        direccion: "",
+        giro: "",
+      };
+      this.divButton = true;
+      this.typeform = "create";
     },
 
     eliminar(datos) {

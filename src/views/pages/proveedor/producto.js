@@ -6,11 +6,13 @@ import $ from 'jquery'
 import { required} from "vuelidate/lib/validators";
 import Multiselect from "vue-multiselect";
 export default {
+  
   components: {
     Layout,
     Multiselect,
     Swal,
   },
+
   data() {
     return {
       urlbackend: this.$urlBackend,
@@ -27,6 +29,7 @@ export default {
       typeform: "create",
       modeSelectProveedor: false,
       divButton: true,
+      proveedores: [],
 
       // permiso
       crearproductoproveedor: this.$CrearProductoProveedor,
@@ -86,6 +89,7 @@ export default {
       ],
     };
   },
+
   validations: {
     form: {
       id_proveedor: {
@@ -108,6 +112,7 @@ export default {
       }
     },
   },
+
   mounted() {  
     this.traerProveedores();
   },

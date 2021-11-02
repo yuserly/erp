@@ -151,6 +151,7 @@ export default {
 <template>
   <header id="page-topbar">
     <div class="navbar-header">
+
       <div class="d-flex">
         <!-- LOGO -->
         <div class="navbar-brand-box">
@@ -183,20 +184,7 @@ export default {
         </button>
 
         <!-- App Search-->
-        <form class="app-search d-none d-lg-block">
-          <div class="position-relative">
-            <input
-              type="text"
-              class="form-control"
-              :placeholder="$t('navbar.search.text')"
-            />
-            <span class="uil-search"></span>
-          </div>
-        </form>
-      </div>
-
-      <div class="d-flex">
-        <div class="d-flex flex-column pt-3 bd-highlight" v-if="empGlobMulti">
+        <div class="pt-3 divSelect">
           <multiselect
             v-model="empresaSelect"
             placeholder="Seleccionar"
@@ -204,7 +192,14 @@ export default {
             label= "razon_social"
             :options="options"
             @input="changeSelectEmpresa()"
+            v-if="empGlobMulti"
           ></multiselect>
+        </div>
+      </div>
+
+      <div class="d-flex">
+        <div class="flex-grow-5 bd-highlight pt-3" >
+          
         </div>
                 
         <div class="dropdown d-none d-lg-inline-block ms-1">
@@ -361,6 +356,11 @@ export default {
           menu-class="dropdown-menu-end"
         >
           <template v-slot:button-content>
+            <img
+              class="rounded-circle header-profile-user"
+              src="@/assets/images/users/avatar-4.jpg"
+              alt="Header Avatar"
+            />
             <span
               class="d-none d-xl-inline-block ms-1 fw-medium font-size-15"
               >{{ $t("navbar.dropdown.marcus.text") }}</span
@@ -390,6 +390,7 @@ export default {
           </a>
         </b-dropdown>
       </div>
+
     </div>
   </header>
 </template>
