@@ -209,6 +209,13 @@ export const menuItems = [
         parentId: 7,
         permiso: Vue.prototype.$SolicitudInicioActividad,
       },
+      {
+        id: 7.2,
+        label: "Remuneraciones",
+        link: "/remuneraciones",
+        parentId: 7,
+        permiso: Vue.prototype.$SolicitudInicioActividad,
+      },
     ]
   }
  

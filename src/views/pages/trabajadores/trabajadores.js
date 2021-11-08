@@ -45,7 +45,7 @@ export default {
         afp_id: "",
         comuna_id: "",
         region_id: "",
-        anturlpdf:'',
+        anturlpdf:"",
       },
       formcarga: [],
       formacargatemp: {
@@ -381,7 +381,7 @@ export default {
       
       if (!this.$v.form.$invalid && !this.rutexist) {
 
-
+        console.log(this.form)
         var fd = new FormData();
         fd.append("rut", this.form.rut);
         fd.append("nombres", this.form.nombres);
@@ -459,7 +459,7 @@ export default {
                   let message = "";
                   let type = "";
 
-                  if (this.form.id_trabajador) {
+                  if (this.form.id_trabajador == "") {
                     title = "Crear Trabajador";
                     message = "Trabajador  creada con exito";
                     type = "error";

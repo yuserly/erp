@@ -247,6 +247,15 @@ const routes = [
       ),
     meta: { requiresAuth: true },
   },
+  {
+    path: "/remuneraciones",
+    name: "remuneraciones",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/remuneraciones/remuneraciones.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = new VueRouter({
@@ -500,6 +509,12 @@ function hasAccess(name) {
         return false;
       }
       case "trabajadores":
+      if (rol == "Administrador" || rol == "Docente" || rol == "Estudiante") {
+        return true;
+      } else {
+        return false;
+      }
+      case "remuneraciones":
       if (rol == "Administrador" || rol == "Docente" || rol == "Estudiante") {
         return true;
       } else {
