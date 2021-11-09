@@ -265,7 +265,33 @@ const routes = [
       ),
     meta: { requiresAuth: true },
   },
-  
+  {
+    path: "/indicadores-previsionales",
+    name: "indicadores previsionales",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/indicadoresP/indicadores.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/trabajadores",
+    name: "trabajadores",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/trabajadores/trabajadores.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/remuneraciones",
+    name: "remuneraciones",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/remuneraciones/remuneraciones.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = new VueRouter({
@@ -537,6 +563,25 @@ function hasAccess(name) {
 
       case "ver solicitud 4415":
       if (rol == "Administrador" || rol == "Docente") {
+        return true;
+      } else {
+        return false;
+      }
+
+      case "indicadores previsionales":
+      if (rol == "Administrador" || rol == "Docente" || rol == "Estudiante") {
+        return true;
+      } else {
+        return false;
+      }
+      case "trabajadores":
+      if (rol == "Administrador" || rol == "Docente" || rol == "Estudiante") {
+        return true;
+      } else {
+        return false;
+      }
+      case "remuneraciones":
+      if (rol == "Administrador" || rol == "Docente" || rol == "Estudiante") {
         return true;
       } else {
         return false;

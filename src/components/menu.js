@@ -77,6 +77,13 @@ export const menuItems = [
         parentId: 2,
         permiso: Vue.prototype.$SolicitudEmpresa,
       },
+      {
+        id: 2.6,
+        label: "Indicadores Previsionales",
+        link: "/indicadores-previsionales",
+        parentId: 2,
+        permiso: Vue.prototype.$SolicitudEmpresa,
+      },
     ],
   },
   
@@ -189,5 +196,27 @@ export const menuItems = [
       },
     ],
   },
+  {
+    id: 7,
+    label: "RRHH",
+    icon: "fab fa-whmcs",
+    permiso: Vue.prototype.$ListarProductoProveedor,
+    subItems: [
+      {
+        id: 7.1,
+        label: "Trabajadores",
+        link: "/trabajadores",
+        parentId: 7,
+        permiso: Vue.prototype.$SolicitudInicioActividad,
+      },
+      {
+        id: 7.2,
+        label: "Remuneraciones",
+        link: "/remuneraciones",
+        parentId: 7,
+        permiso: Vue.prototype.$SolicitudInicioActividad,
+      },
+    ]
+  }
  
 ];
