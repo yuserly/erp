@@ -12,24 +12,23 @@ export default {
         urlbackend: this.$urlBackend,     
         proveedores: [],
         unidades: [],
-        typeform: "create",
+        typeform: "create", 
         buttonForm: true,
         infoEmpresa: JSON.parse(localStorage.getItem("globalEmpresasSelected")),
-        info: {
-            rut: JSON.parse(localStorage.getItem("globalEmpresasSelected")).rut_empresa,
-            razon_social: JSON.parse(localStorage.getItem("globalEmpresasSelected")).razon_social,
-            celular: JSON.parse(localStorage.getItem("globalEmpresasSelected")).celular,
-            direccion: JSON.parse(localStorage.getItem("globalEmpresasSelected")).direccion,
-            correo: JSON.parse(localStorage.getItem("globalEmpresasSelected")).correo,
-        },
+        documentoName: "",
+        tipoDocumento: this.$route.params.tipo,
+        inputFechaVencimiento: true,
 
         form : {
-            tipo: "",
-            descripcion: "",
-            codigo: "",
-            debe_haber: "0",
-            comprobante: "",
-            vencimiento: "0",
+            documento_id: "",
+            n_documento: "",
+            proveedor: "",
+            fechadoc: "",
+            fechaven: "",
+            glosa: "",
+            direccion: "",
+            unidad: "",
+            empresa: JSON.parse(localStorage.getItem("globalEmpresasSelected")),
         },
 
       };
@@ -43,51 +42,30 @@ export default {
         getInicial()
         {   
             this.axios
-                .get(`${this.urlbackend}/compraemitirdocumento/getInicial`)
+                .get(`${this.urlbackend}/compraemitirdocumento/getInicial/`+this.tipoDocumento)
                 .then((res) => {
-                    console.log(res);
-                    this.proveedores = res.proveedores.data;
-                    this.unidades = res.unidades.data;
+                    this.proveedores = res.data.proveedores;
+                    this.unidades = res.data.unidades;
+                    this.documentoName = res.data.documento.descripcion;
+                    this.form.documento_id = res.data.documento.id_documento;
+                    if(res.data.documento.f_vencimiento == 1){ this.inputFechaVencimiento= true; }else if(res.data.documento.f_vencimiento == 2){ this.inputFechaVencimiento= false;}
                 })
                 .catch((error) => {
                 console.log("error", error);
-                const title = "Crear subnivel";
-                const message = "Error al crear el subnivel";
-                const type = "error";
-    
-                this.modal = false;
-                this.$v.form.$reset();
-    
-                this.successmsg(title, message, type);
                 });
         },
-        
+        onChangeProveedor(value)
+        {
+          this.form.direccion = value['direccion'];
+        },
         formSubmit() {
             this.submitted = true;
-            
               if (this.typeform == "create") {
                 this.axios
-                  .post(`${this.urlbackend}/tipodocumentos/store`, this.form)
+                  .post(`${this.urlbackend}/compraemitirdocumento/encabezadoSave`, this.form)
                   .then((res) => {
-                    if (res.data.success) {
-                      const title = "Documento Tributario";
-                      const message = "Añadido exitosamente";
-                      const type = "success";
-      
-                      this.form = {
-                        tipo: "",
-                        descripcion: "",
-                        codigo: "",
-                        debe_haber: "0",
-                        comprobante: "",
-                        vencimiento: "0",
-                      };
-      
-                      this.modal = false;
-                      
-                      this.successmsg(title, message, type);
-      
-                    }
+                    console.log(res);
+                    this.$router.push('../modificarDocumento/'+res.data) 
                   })
                   .catch((error) => {
                     console.log("error", error);

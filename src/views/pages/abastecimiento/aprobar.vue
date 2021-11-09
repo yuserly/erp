@@ -1,4 +1,4 @@
-<script src="./emitir.js"></script>
+<script src="./aprobar.js"></script>
 
 <template>
   <Layout>
@@ -7,7 +7,7 @@
         <div class="card">
           <div class="card-body row">
             <div class="col-10">
-                <h6><b>Ingresar Documentos Tibutarios</b></h6>
+                <h6><b>Aprobar Documentos Tributarios</b></h6>
             </div>
             <div class="row mt-4">
               <div class="col-sm-12 col-md-6">
@@ -54,14 +54,25 @@
               <template v-slot:cell(acción)="data">
                   <ul class="list-inline mb-0">
                     <li class="list-inline-item">
-                      <router-link :to="'abastecimiento_emitir/'+data.item.tipo">
                       <a
                         href="javascript:void(0);"
                         class="px-2 text-success"
                         v-b-tooltip.hover
-                        title="Ir"
+                        title="Aprobar"
+                        v-on:click="aprobarDocumento(data.item.id_encabezado)"
                       >
-                        <i class="uil uil-file-plus-alt font-size-18"></i>
+                        <i class="uil uil-check-circle font-size-18"></i>
+                      </a>
+                    </li>
+                    <li class="list-inline-item">
+                      <router-link :to="'modificarDocumento/'+data.item.n_documento">
+                      <a
+                        href="javascript:void(0);"
+                        class="px-2 text-warning"
+                        v-b-tooltip.hover
+                        title="Modificar"
+                      >
+                        <i class="uil uil-edit font-size-18"></i>
                       </a>
                       </router-link>
                     </li>

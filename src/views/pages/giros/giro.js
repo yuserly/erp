@@ -148,12 +148,11 @@ export default {
 
       this.$v.$touch();
 
-      if (!this.$v.$invalid) {
+      if (!this.$v.$invalid) { 
         if (this.typeform == "create") {
           this.axios
             .post(`${this.urlbackend}/giro/creargiro`, this.form)
             .then((res) => {
-                console.log(res);
               if (res.data.success) {
                 const title = "Nueva Actividad Económica";
                 const message = res.data.success;

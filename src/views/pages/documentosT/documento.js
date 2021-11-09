@@ -22,6 +22,12 @@ export default {
             debe_haber: "0",
             comprobante: "",
             vencimiento: "0",
+            pago: "0",
+            ciclo: "0",
+            libro: "0",
+            libroH: "0",
+            impuesto: "0",
+
         },
         
         tableData: [],
@@ -79,6 +85,7 @@ export default {
         this.getTabla();
     },
     methods: {
+      
         onFiltered(filteredItems) {
             this.totalRows = filteredItems.length;
             this.currentPage = 1;
@@ -107,7 +114,7 @@ export default {
         getTabla()
         {
             this.axios
-                  .get(`${this.urlbackend}/tipodocumentos/getTabla`)
+                  .get(`${this.urlbackend}/tipodocumentos/getTablaCompra`)
                   .then((res) => {
                         this.tableData = res.data;
                         res.data.map((p) => {
@@ -115,9 +122,9 @@ export default {
                             if(p.f_vencimiento == 1){ p["vencimiento"]  = "SI";}else{ p["vencimiento"]  = "NO";}
                             if(p.debe_haber == 1){ p["deber"]  = "DEBE";}else{ p["deber"]  = "HABER";}
                             
-                            return p;
+                            return p; 
                         });
-                  })
+                  }) 
                   .catch((error) => {
                     console.log("error", error);
                     const title = "Crear subnivel";
@@ -153,6 +160,12 @@ export default {
                 comprobante: datos.tipo_comprobante,
                 vencimiento: datos.f_vencimiento,
                 debe_haber: datos.debe_haber,
+                ciclo: datos.ciclo,
+                libro: datos.libro_com_ven,
+                libroH: datos.libro_honr,
+                impuesto: datos.iva_honorario,
+                pago: datos.pago,
+
             };
         },
 
@@ -164,10 +177,7 @@ export default {
                   .post(`${this.urlbackend}/tipodocumentos/store`, this.form)
                   .then((res) => {
                     if (res.data.success) {
-                      const title = "Documento Tributario";
-                      const message = "Añadido exitosamente";
-                      const type = "success";
-      
+                      
                       this.form = {
                         tipo: "",
                         descripcion: "",
@@ -175,13 +185,24 @@ export default {
                         debe_haber: "0",
                         comprobante: "",
                         vencimiento: "0",
+                        pago: "0",
+                        ciclo: "0",
+                        libro: "0",
+                        libroH: "0",
+                        impuesto: "0",
                       };
       
-                      this.modal = false;
+                      this.modal = false; 
                       this.getTabla();
                       
-                      this.successmsg(title, message, type);
-      
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Documento Tributario',
+                        text: "Ha sido creado exitosamente.",
+                        timer: 1500,
+                        showConfirmButton: false
+                      });
+                      
                     }
                   })
                   .catch((error) => {
@@ -202,9 +223,6 @@ export default {
                   )
                   .then((res) => {
                     if (res.data.success) {
-                      const title = "Documento Tributario"; 
-                      const message = "actualizado con exito";
-                      const type = "success";
       
                       this.form = {
                         tipo: "",
@@ -219,7 +237,13 @@ export default {
                         this.typeform = "create";
                         this.buttonForm = false;
                       
-                      this.successmsg(title, message, type);
+                        Swal.fire({
+                          icon: 'success',
+                          title: 'Documento Tributario',
+                          text: "Ha sido actualizado exitosamente.",
+                          timer: 1500,
+                          showConfirmButton: false
+                        });
                     }
                   })
                   .catch((error) => {
@@ -235,9 +259,6 @@ export default {
               }
         },
 
-        successmsg(title, message, type) {
-            Swal.fire(title, message, type);
-        },
     },
     
   }; 

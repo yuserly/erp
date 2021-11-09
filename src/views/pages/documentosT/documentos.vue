@@ -19,13 +19,13 @@
                     Show&nbsp;
                     <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp;entries
                   </label>
-                </div>
+                </div> 
               </div> 
               <!-- Search -->
               <div class="col-sm-12 col-md-6">
                 <div
                   id="tickets-table_filter"
-                  class="dataTables_filter text-md-end"
+                  class="dataTables_filter text-md-end" 
                 >
                   <label class="d-inline-flex align-items-center">
                     Search:
@@ -123,6 +123,16 @@
                 </div>
                 <div class="col-md-2">
                     <div class="mb-3">
+                        <label for="ciclo">Ciclo</label>
+                        <select class="form-control form-control-sm" v-model="form.ciclo">
+                            <option value="0">Seleccionar</option>
+                            <option value="1">Compra</option>
+                            <option value="2">Venta</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-3">
                         <label for="nivel">Debe - Haber</label>
                         <select class="form-control form-control-sm" v-model="form.debe_haber">
                             <option value="0">Seleccionar</option>
@@ -145,11 +155,52 @@
                 </div>
                 <div class="col-md-2">
                     <div class="mb-3">
-                        <label for="nivel">Fecha Vencimiento</label>
+                        <label for="vencimiento">Fecha Vencimiento</label>
                         <select class="form-control form-control-sm" v-model="form.vencimiento">
                             <option value="0">Seleccionar</option>
                             <option value="1">SI</option>
                             <option value="2">NO</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label for="pago">Pago</label>
+                        <select class="form-control form-control-sm" v-model="form.pago">
+                            <option value="0">Seleccionar</option>
+                            <option value="1">Requiere</option>
+                            <option value="2">NO Requiere</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-3">
+                        <label for="pago">Libro</label>
+                        <select class="form-control form-control-sm" v-model="form.libro">
+                            <option value="0">Seleccionar</option>
+                            <option value="1">Compra</option>
+                            <option value="2">Venta</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-3">
+                        <label for="pago">Libro Honorarios</label>
+                        <select class="form-control form-control-sm" v-model="form.libroH">
+                            <option value="0">Seleccionar</option>
+                            <option value="1">SI</option>
+                            <option value="2">NO</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="mb-3">
+                        <label for="pago">IVA / Honorario</label>
+                        <select class="form-control form-control-sm" v-model="form.impuesto">
+                            <option value="0">Seleccionar</option>
+                            <option value="1">Afecto IVA</option>
+                            <option value="2">Exento IVA</option>
+                            <option value="3">Retención</option>
                         </select>
                     </div>
                 </div>

@@ -213,22 +213,59 @@ const routes = [
   },
   {
     path: "/abastecimiento_emitir/:tipo",
-    name: "abastecimiento emitir show",
-    component: () =>
-      import(
-        /* webpackChunkName: "home" */ "../views/pages/abastecimiento/emitirShow.vue"
-      ),
-    meta: { requiresAuth: true },
-  },
-  {
-    path: "/formulario-tributario",
-    name: "formulario tributario",
+    name: "abastecimiento formulario",
     component: () =>
       import(
         /* webpackChunkName: "home" */ "../views/pages/abastecimiento/formulario.vue"
       ),
     meta: { requiresAuth: true },
   },
+  {
+    path: "/modificarDocumento/:tipo",
+    name: "detalle emitir",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/abastecimiento/detalle.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/modificarDocumento",
+    name: "modificar documento",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/abastecimiento/modificar.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/aprobarDocumento",
+    name: "aprobar documento",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/abastecimiento/aprobar.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/emitirDocumento",
+    name: "emitir documento",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/abastecimiento/listaEmitir.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/verDocumentoCompra",
+    name: "ver docompra",
+    component: () =>
+      import(
+        /* webpackChunkName: "home" */ "../views/pages/abastecimiento/verDocumento.vue"
+      ),
+    meta: { requiresAuth: true },
+  },
+  
 ];
 
 const router = new VueRouter({
@@ -343,7 +380,7 @@ function hasAccess(name) {
       } else {
         return false;
       }
-      case "abastecimiento emitir show":
+      case "abastecimiento formulario":
       if (rol == "Estudiante") {
         return true;
       } else {
@@ -368,6 +405,36 @@ function hasAccess(name) {
           return false;
         }
         case "formulario tributario":
+        if (rol == "Estudiante") {
+          return true;
+        } else {
+          return false;
+        }
+        case "detalle emitir":
+        if (rol == "Estudiante") {
+          return true;
+        } else {
+          return false;
+        }
+        case "aprobar documento":
+        if (rol == "Estudiante") {
+          return true;
+        } else {
+          return false;
+        }
+        case "emitir documento":
+        if (rol == "Estudiante") {
+          return true;
+        } else {
+          return false;
+        } 
+        case "ver docompra":
+        if (rol == "Estudiante") {
+          return true;
+        } else {
+          return false;
+        }
+        case "modificar documento":
         if (rol == "Estudiante") {
           return true;
         } else {

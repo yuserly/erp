@@ -108,7 +108,7 @@ export default {
         getTabla()
         {
             this.axios
-                  .get(`${this.urlbackend}/tipodocumentos/getTabla`)
+                  .get(`${this.urlbackend}/tipodocumentos/getTablaCompra`)
                   .then((res) => {
                         this.tableData = res.data;
                         res.data.map((p) => {
@@ -160,29 +160,29 @@ export default {
         formSubmit() {
             this.submitted = true;
             
-              if (this.typeform == "create") {
                 this.axios
                   .post(`${this.urlbackend}/tipodocumentos/store`, this.form)
                   .then((res) => {
-                    if (res.data.success) {
-                      const title = "Documento Tributario";
-                      const message = "Añadido exitosamente";
-                      const type = "success";
+                    console.log(res);
+                    // if (res.data.success) {
+                    //   const title = "Documento Tributario";
+                    //   const message = "Añadido exitosamente";
+                    //   const type = "success";
       
-                      this.form = {
-                        tipo: "",
-                        descripcion: "",
-                        codigo: "",
-                        debe_haber: "0",
-                        comprobante: "",
-                        vencimiento: "0",
-                      };
+                    //   this.form = {
+                    //     tipo: "",
+                    //     descripcion: "",
+                    //     codigo: "",
+                    //     debe_haber: "0",
+                    //     comprobante: "",
+                    //     vencimiento: "0",
+                    //   };
       
-                      this.modal = false;
+                    //   this.modal = false;
                       
-                      this.successmsg(title, message, type);
+                    //   this.successmsg(title, message, type);
       
-                    }
+                    // }
                   })
                   .catch((error) => {
                     console.log("error", error);
@@ -195,44 +195,7 @@ export default {
       
                     this.successmsg(title, message, type);
                   });
-              } else if(this.typeform == "edit") {
-                this.axios
-                  .put(
-                    `${this.urlbackend}/tipodocumentos/update/${this.form.id}`,this.form
-                  )
-                  .then((res) => {
-                    if (res.data.success) {
-                      const title = "Documento Tributario"; 
-                      const message = "actualizado con exito";
-                      const type = "success";
-      
-                      this.form = {
-                        tipo: "",
-                        descripcion: "",
-                        codigo: "",
-                        debe_haber: "0",
-                        comprobante: "",
-                        vencimiento: "0",
-                      };
-      
-                        this.modal = false;
-                        this.typeform = "create";
-                        this.buttonForm = false;
-                      
-                      this.successmsg(title, message, type);
-                    }
-                  })
-                  .catch((error) => {
-                    console.log("error", error);
-                    const title = "Editar subnivel";
-                    const message = "Error al editar el subnivel";
-                    const type = "error";
-                    this.modal = false;
-                    this.$v.form.$reset();
-      
-                    this.successmsg(title, message, type);
-                  });
-              }
+             
         },
 
         successmsg(title, message, type) {

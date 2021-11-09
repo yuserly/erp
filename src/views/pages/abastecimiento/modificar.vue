@@ -1,4 +1,4 @@
-<script src="./emitirShow.js"></script>
+<script src="./modificar.js"></script>
 
 <template>
   <Layout>
@@ -6,13 +6,8 @@
       <div class="col-12">
         <div class="card">
           <div class="card-body row">
-            <div class="col-9">
-                <h6>{{documentoName}}</h6>
-            </div>
-            <div class="col-3 d-flex justify-content-end">
-                <router-link to="/formulario-tributario">
-                    <button class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Ingresar Nuevo Documento</button>
-                </router-link>
+            <div class="col-10">
+                <h6><b>Documentos tributarios de Compra</b> - MODIFICACIÓN</h6>
             </div>
             <div class="row mt-4">
               <div class="col-sm-12 col-md-6">
@@ -23,7 +18,7 @@
                   </label>
                 </div>
               </div>
-
+              <!-- Search -->
               <div class="col-sm-12 col-md-6">
                 <div
                   id="tickets-table_filter"
@@ -59,15 +54,14 @@
               <template v-slot:cell(acción)="data">
                   <ul class="list-inline mb-0">
                     <li class="list-inline-item">
-                      <router-link to="crear-empresa">
+                      <router-link :to="'modificarDocumento/'+data.item.n_documento">
                       <a
                         href="javascript:void(0);"
-                        class="px-2 text-danger"
+                        class="px-2 text-warning"
                         v-b-tooltip.hover
                         title="Ir"
-                        :on-click="editar(data.item)"
                       >
-                        <i class="uil uil-power font-size-18"></i>
+                        <i class="uil uil-edit font-size-18"></i>
                       </a>
                       </router-link>
                     </li>
